@@ -3,8 +3,8 @@
 $api = app('Dingo\Api\Routing\Router');
 
 $api->group(['middleware' => 'api.auth', 'version' => 'v1'], function ($api) {
-	$api->post('book/store', 'App\Api\V1\Controllers\BookController@store');
-	$api->get('book', 'App\Api\V1\Controllers\BookController@index');
+	// resource creates all RESTful CRUD routes
+	$api->resource('books', 'App\Api\V1\Controllers\BookController'); 
 });
 
 $api->version('v1', function ($api) {
