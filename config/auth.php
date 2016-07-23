@@ -18,6 +18,9 @@ return [
         'passwords' => 'users',
     ],
 
+    'model' => App\User::class,
+    'table' => 'users',
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
