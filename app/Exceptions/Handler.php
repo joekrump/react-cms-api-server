@@ -17,10 +17,10 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        AuthorizationException::class,
-        HttpException::class,
-        ModelNotFoundException::class,
-        ValidationException::class,
+      AuthorizationException::class,
+      HttpException::class,
+      ModelNotFoundException::class,
+      ValidationException::class,
     ];
 
     /**
@@ -33,7 +33,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        parent::report($e);
+      parent::report($e);
     }
 
     /**
@@ -45,6 +45,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return parent::render($request, $e);
+      if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException)
+      {
+        return response(['Token is invalid'], 401);
+      }
+      if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException)
+      {
+        return response(['Token has expired'], 401);
+      }
+      return parent::render($request, $e);
     }
-}
+  }
