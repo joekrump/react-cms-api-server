@@ -2,10 +2,12 @@
 
 namespace App;
 
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use Authenticatable, CanResetPassword, EntrustUserTrait;
     /**
      * The attributes that are mass assignable.
      *

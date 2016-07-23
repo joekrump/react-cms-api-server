@@ -51,18 +51,36 @@ class UserController extends Controller
   }
 
   public function createRole(Request $request){
-      // Todo       
+    $role = new Role();
+    $role->name = $request->input('name');
+    $role->save();
+
+    return response()->json("created");    
   }
 
   public function createPermission(Request $request){
-      // Todo       
+    $viewUsers = new Permission();
+    $viewUsers->name = $request->input('name');
+    $viewUsers->save();
+
+    return response()->json("created");      
   }
 
   public function assignRole(Request $request){
-       // Todo
+    $user = User::where('email', '=', $request->input('email'))->first();
+
+    $role = Role::where('name', '=', $request->input('role'))->first();
+    // $user->attachRole($request->input('role'));
+    $user->roles()->attach($role->id);
+
+    return response()->json("created");
   }
 
   public function attachPermission(Request $request){
-      // Todo       
+    $role = Role::where('name', '=', $request->input('role'))->first();
+    $permission = Permission::where('name', '=', $request->input('name'))->first();
+    $role->attachPermission($permission);
+
+    return response()->json("created");
   }
 }
