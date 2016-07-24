@@ -9,7 +9,7 @@ $api->group(['middleware' => ['api.auth', 'cors'], 'version' => 'v1'], function 
 
 	// the user has to be an admin or have the create-users permissions before they can access the routes in this group
 	// 
-	$api->group(['middleware' => ['ability:admin,create-users']], function($api){
+	$api->group(['middleware' => ['ability:admin,manage-users']], function($api){
 		$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup');
 		// Route to create a new role
 		$api->post('role', 'App\Api\V1\Controllers\UserController@createRole');
@@ -20,9 +20,16 @@ $api->group(['middleware' => ['api.auth', 'cors'], 'version' => 'v1'], function 
 		// Route to attache permission to a role
 		$api->post('attach-permission', 'App\Api\V1\Controllers\UserController@attachPermission');
 		// get list of users
-		$api->get('users', 'App\Api\V1\Controllers\UserController@index');
 	});
 
+	// Routes accessible by User with admin role, or with a role that has 'manage-users' or 'manage-user-account' permission assigned to it.
+	//
+	$api->group(['middleware' => ['ability:admin,manage-users|manage-user-account']], function($api){
+		// TODO: add edit user profile should be here.
+		// 
+		// get list of users
+		$api->get('users', 'App\Api\V1\Controllers\UserController@index');
+	});
 });
 
 $api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {

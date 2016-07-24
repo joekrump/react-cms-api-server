@@ -10,7 +10,8 @@
 	    "tymon/jwt-auth": "0.5.*",
         "dingo/api": "1.0.*@dev",
         "barryvdh/laravel-cors": "^0.7.1",
-        "zizaco/entrust": "dev-laravel-5"
+        "zizaco/entrust": "dev-laravel-5",
+        "barryvdh/laravel-debugbar": "^2.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
