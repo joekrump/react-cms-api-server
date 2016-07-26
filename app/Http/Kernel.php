@@ -35,9 +35,10 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'cors',
         ],
-        'auth-cors' => [
+        'api-auth' => [
             'api.auth',
             'cors',
+            'api.throttle:60,1'
         ]
     ];
 

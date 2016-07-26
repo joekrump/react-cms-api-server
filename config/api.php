@@ -154,7 +154,7 @@ return [
     */
 
     'middleware' => [
-
+        
     ],
 
     /*
@@ -183,7 +183,7 @@ return [
     */
 
     'throttling' => [
-
+        'default' => 'Dingo\Api\Http\RateLimit\Throttle\Route'
     ],
 
     /*

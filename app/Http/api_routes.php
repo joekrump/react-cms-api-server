@@ -2,7 +2,7 @@
 	
 $api = app('Dingo\Api\Routing\Router');
 
-$api->group(['middleware' => ['api.auth', 'cors'], 'version' => 'v1'], function ($api) {
+$api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 	// resource creates all RESTful CRUD routes
 	// 
 	$api->resource('books', 'App\Api\V1\Controllers\BookController'); 
@@ -37,4 +37,5 @@ $api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
 	$api->post('auth/login', 'App\Api\V1\Controllers\AuthController@login');
 	$api->post('auth/recovery', 'App\Api\V1\Controllers\AuthController@recovery');
 	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
+	$api->post('stripe/make-payment', 'App\Api\V1\Controllers\PaymentController@process_payment');
 });
