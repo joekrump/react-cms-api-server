@@ -11,9 +11,13 @@ use App\Helpers\UnitConversionHelper;
 class PaymentController extends Controller
 {
 
+  public function __construct(){
+    \Stripe\Stripe::setApiKey(\Config::get('stripe.test.sk'));
+  }
+  
   public function process_payment(Request $request){
 
-    \Stripe\Stripe::setApiKey(\Config::get('stripe.test.sk'));
+    
 
     $amt = $request->get('amt');
 
@@ -24,10 +28,13 @@ class PaymentController extends Controller
     }
 
     try {
+      // DEBUGGING TIP: NOTE THAT IF AN INVALID PARAM IS PASSED TO THE CHARGE METHOD (ie. an invalid token or param name) THIS METHOD WILL SIMPLY RETURN 200 and the charge request is silently ignored. 
+      // 
       $email = $request->get('email');
       $token = $request->get('token');
       
       // TODO: Feature: Could do something with the values returned in cahrge if desired...
+      //       perhaps store stripe customer id with user.
       $charge = \Stripe\Charge::create([
         'receipt_email' => $email,
         'source' => $token,
@@ -63,6 +70,5 @@ class PaymentController extends Controller
 
   private function setAmtInDollars($amt) {
     // get the float value of the amount that was entered.
-    
   }
 }
