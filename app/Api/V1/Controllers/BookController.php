@@ -15,11 +15,10 @@ class BookController extends Controller
   public function index()
   {
       $currentUser = JWTAuth::parseToken()->authenticate();
-      return $currentUser
+      return ['items' => $currentUser
           ->books()
           ->orderBy('created_at', 'DESC')
-          ->get()
-          ->toArray();
+          ->get(['id', 'title as primary', 'author as secondary'])];
   }
 
 

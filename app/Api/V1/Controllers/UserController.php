@@ -30,7 +30,7 @@ class UserController extends Controller
       //     ->toArray();
       //     
       
-      return response()->json(['auth'=>Auth::user(), 'users'=>User::all()]);
+      return response()->json(['auth'=>Auth::user(), 'items'=>User::all(['id', 'name as primary', 'email as secondary'])]);
   }
 
 

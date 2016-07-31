@@ -17,8 +17,6 @@ class PaymentController extends Controller
   
   public function process_payment(Request $request){
 
-    
-
     $amt = $request->get('amt');
 
     if(!is_numeric($amt)){
@@ -66,9 +64,5 @@ class PaymentController extends Controller
       // Something else happened, completely unrelated to Stripe
       return response()->json($e)->status(500);
     }
-  }
-
-  private function setAmtInDollars($amt) {
-    // get the float value of the amount that was entered.
   }
 }
