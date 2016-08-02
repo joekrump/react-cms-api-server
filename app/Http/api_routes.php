@@ -7,6 +7,8 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 	// 
 	$api->resource('books', 'App\Api\V1\Controllers\BookController'); 
 
+	$api->get('dashboard', 'App\Api\V1\Controllers\DashboardController@index');
+
 	// the user has to be an admin or have the create-users permissions before they can access the routes in this group
 	// 
 	$api->group(['middleware' => ['ability:admin,manage-users']], function($api){
