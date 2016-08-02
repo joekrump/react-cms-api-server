@@ -16,7 +16,7 @@ class DashboardController extends Controller
   {
       // $currentUser = JWTAuth::parseToken()->authenticate();
       
-      return ['users' => User::count()];
+      return ['userCount' => User::count()];
   }
 
 
