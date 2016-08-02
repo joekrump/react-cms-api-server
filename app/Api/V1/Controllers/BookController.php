@@ -18,7 +18,7 @@ class BookController extends Controller
       return ['items' => $currentUser
           ->books()
           ->orderBy('created_at', 'DESC')
-          ->get(['id', 'title as primary', 'author as secondary'])];
+          ->get(['id', 'title as primary', 'author_name as secondary'])];
   }
 
 
