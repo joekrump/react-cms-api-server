@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
         'api-auth' => [
             'cors',
             'api.auth',
+            'last_active'
             // 'api.throttle:60,1'
         ]
     ];
@@ -57,5 +58,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
         'ability' => \App\Http\Middleware\TokenEntrustAbility::class,
+        'last_active' => \App\Http\Middleware\LogLastUserActivity::class,
     ];
 }

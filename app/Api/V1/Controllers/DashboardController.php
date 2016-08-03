@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use JWTAuth;
 use App\User;
 use Dingo\Api\Routing\Helpers;
+use Cache;
 
 class DashboardController extends Controller
 {
@@ -14,14 +15,17 @@ class DashboardController extends Controller
 
   public function index()
   {
-      // $currentUser = JWTAuth::parseToken()->authenticate();
-      $users = User::all();
-      
-      return [
-        'users' => User::orderBy('logged_in', 'DESC')
-                          ->orderBy('name', 'ASC')
-                          ->get(['email', 'name', 'id', 'logged_in'])
-      ];
+    // $currentUser = JWTAuth::parseToken()->authenticate();
+    $users =  User::orderBy('logged_in', 'DESC')
+                        ->orderBy('name', 'ASC')
+                        ->get(['email', 'name', 'id', 'logged_in']);
+
+    foreach ( $users as $user )
+    {
+      $user->logged_in = Cache::has('user-is-online-' . $user->id);
+    } 
+
+    return compact('users');
   }
 
 
