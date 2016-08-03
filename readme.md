@@ -41,9 +41,6 @@ You will need:
 
 You can specify your routes in the `api_routes.php` file, that will be automatically loaded. In this file you will find many examples of routes.
 
-### Secrets Generation
-
-Every time you create a new project starting from this repository, the _php artisan jwt:generate_ command will be executed.
 
 ## Configuration
 
@@ -56,6 +53,54 @@ However, there are some extra options that I placed in a _config/boilerplate.php
 * **signup_token_release**: if "true", an access token will be released from the signup endpoint if everything goes well. Otherwise, you will just get a _201 Created_ response;
 * **reset_token_release**: if "true", an access token will be released from the signup endpoint if everything goes well. Otherwise, you will just get a _200_ response;
 * **recovery_email_subject**: here you can specify the subject for your recovery data email;
+
+## Additional Configuration
+
+Copy .example.env into .env file
+
+Create database and set ENV variables in .env to match
+
+Run 
+```bash
+$ php artisan migrate
+```
+then
+```bash
+$ php artisan db:seed
+```
+
+### Generate App key
+
+```bash
+$ php artisan key:generate
+```
+
+### Secrets Generation
+
+```bash
+$ php artisan jwt:generate
+```
+
+### Setup Stripe
+
+Create a `stripe.php` file in the /config directory with the following contents:
+
+```php
+<?php
+
+return [
+
+  'test' => [
+    'sk' => env('STRIPE_TEST_SK', 'set me!')
+  ],
+  'live' =>
+  [
+    'sk' => env('STRIPE_LIVE_SK', 'set me!')
+  ]
+];
+```
+
+Now set the corresponding environment variables in your .env file.
 
 ## Creating Endpoints
 
@@ -73,6 +118,3 @@ Thanks to the _barryvdh/laravel-cors_ package, you can handle CORS easily. Just 
 
 I currently removed the _VerifyCsrfToken_ middleware from the _$middleware_ array in _app/Http/Kernel.php_ file. If you want to use it in your project, just use the route middleware _csrf_ you can find, in the same class, in the _$routeMiddleware_ array.
 
-## Feedback
-
-I currently made this project for personal purposes. I decided to share it here to help anyone with the same needs. If you have any feedback to improve it, feel free to make a suggestion, or open a PR!
