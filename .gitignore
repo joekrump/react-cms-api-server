@@ -130,3 +130,6 @@ storage/
 
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
+
+# sublime workspace file
+app/Api/V1/Controllers/l-api-v2.sublime-workspace
