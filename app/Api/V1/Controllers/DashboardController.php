@@ -17,7 +17,11 @@ class DashboardController extends Controller
       // $currentUser = JWTAuth::parseToken()->authenticate();
       $users = User::all();
       
-      return ['userCount' => $users->count(), 'loggedinUsers' => $users->where('logged_in', true)];
+      return [
+        'users' => User::orderBy('logged_in', 'DESC')
+                          ->orderBy('name', 'ASC')
+                          ->get(['email', 'name', 'id', 'logged_in'])
+      ];
   }
 
 
