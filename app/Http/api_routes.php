@@ -4,10 +4,8 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
-
-
 	$api->post('auth/logout', 'App\Api\V1\Controllers\AuthController@logout');
-	
+
 	// resource creates all RESTful CRUD routes
 	// 
 	$api->resource('books', 'App\Api\V1\Controllers\BookController'); 
@@ -16,7 +14,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
 	// the user has to be an admin or have the create-users permissions before they can access the routes in this group
 	// 
-	$api->group(['middleware' => ['ability:admin,manage-users']], function($api){
+	$api->group(['middleware' => ['ability:admin,users']], function($api){
 		$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup');
 		// Route to create a new role
 		$api->post('role', 'App\Api\V1\Controllers\UserController@createRole');
@@ -31,7 +29,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
 	// Routes accessible by User with admin role, or with a role that has 'manage-users' or 'manage-user-account' permission assigned to it.
 	//
-	$api->group(['middleware' => ['ability:admin,manage-users|manage-user-account']], function($api){
+	$api->group(['middleware' => ['ability:admin,users|user-account']], function($api){
 		// TODO: add edit user profile should be here.
 		// 
 		// get list of users

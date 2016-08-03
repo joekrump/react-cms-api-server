@@ -17,25 +17,44 @@ class DatabaseSeeder extends Seeder
     {
 
       Model::unguard();
+      
+      
+      DB::table('role_user')->delete();
+      DB::table(Config::get('auth.table'))->delete();
+      DB::table('roles')->delete();
+      DB::table('permissions')->delete();
+      DB::table('permission_role')->delete();
+      // Clear table, likely 'users'
+      // 
+      
+      $adminRole = Role::create(['name' => 'admin']);
+      $basicRole = Role::create(['name' => 'basic']);
 
-      $adminRole = new Role(['name' => 'admin'])->save();
-      $basicRole = new Role(['name' => 'basic'])->save();
+      $manageUserPermission = Permission::create(['name' => 'users']);
+      $manageUserAccountPermission = Permission::create(['name' => 'user-account']);
 
-      $manageUserPermission new Permission(['name' => 'manage-users'])->save();
-
+      // Admin can manage their account and all users.
+      // 
       $adminRole->attachPermission($manageUserPermission);
+      $adminRole->attachPermission($manageUserAccountPermission);
 
+      // Basic can manage their own account only.
+      // 
+      $basicRole->attachPermission($manageUserAccountPermission);
+
+      // Make an Admin User
+      // NOTE: User::create will hash the password
       $adminUser = User::create([
         'name' => 'admin',
         'email' => 'admin@test.com',
-        'password' => Hash::make('testing')
+        'password' => 'testing'
       ]);
 
       $adminUser->roles()->attach($adminRole);
 
-      DB::table(Config::get('auth.table'))->delete(); // clear table, likely 'Users'
 
-      // Make some basic users with no Roles
+      // Make some Bsic Users
+      // 
       $faker = Faker\Factory::create();
       $limit = 10;
       $users = [];
@@ -44,7 +63,7 @@ class DatabaseSeeder extends Seeder
         $basicUser = User::create([
           'name' => $faker->name,
           'email' => $faker->unique()->email,
-          'password' => Hash::make('testing')
+          'password' => 'testing'
         ]);
         $basicUser->roles()->attach($basicRole);
       }

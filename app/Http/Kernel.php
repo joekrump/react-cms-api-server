@@ -33,12 +33,12 @@ class Kernel extends HttpKernel
 
         'api' => [
             'cors',
-            'throttle:60,1',
+            // 'throttle:60,1',
         ],
         'api-auth' => [
             'cors',
             'api.auth',
-            'api.throttle:60,1'
+            // 'api.throttle:60,1'
         ]
     ];
 
