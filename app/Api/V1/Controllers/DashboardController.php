@@ -36,7 +36,7 @@ class DashboardController extends Controller
     }
     
 
-    return ['users' => $activeUsers, 'widgets' => $widgets];
+    return ['widgetData' => [$widgets->first()->id => $activeUsers], 'widgets' => $widgets];
   }
 
 
