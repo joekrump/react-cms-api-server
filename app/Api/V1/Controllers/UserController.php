@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Log;
 use Dingo\Api\Routing\Helpers;
+use Cache;
 
 class UserController extends Controller
 {
