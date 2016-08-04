@@ -33,6 +33,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role');
+    }
+
+    /**
      * This mutator automatically hashes the password.
      *
      * @var string

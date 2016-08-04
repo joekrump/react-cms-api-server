@@ -43,7 +43,10 @@ class AuthController extends Controller
         $user->logged_in = true;
         $user->save();
 
-        return response()->json(compact('token', 'user'));
+        return response()->json([
+            'token' => $token, 
+            'user' => User::where('id', $user->id)->with('roles.permissions')->get()
+        ]);
     }
 
     public function signup(Request $request)
