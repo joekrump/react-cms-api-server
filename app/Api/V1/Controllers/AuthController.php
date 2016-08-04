@@ -45,7 +45,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token, 
-            'user' => User::where('id', $user->id)->with('roles.permissions')->get()
+            'user' => User::where('id', $user->id)->with('roles.permissions')->first()
         ]);
     }
 
