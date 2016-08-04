@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Widget;
 
 class WidgetController extends Controller
 {
@@ -13,9 +14,16 @@ class WidgetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $all = $request->get('all');
+        if($all) {
+            $widgtes = Widget::orderBy('name')->get();
+        } else {
+            $widgets = Widgets::where('on_dashboard', 0)->orderBy('name')->get();
+        }
+
+        return compact('widgets');
     }
 
     /**

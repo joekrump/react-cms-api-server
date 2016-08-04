@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use App\User;
+use App\Widget;
 use Dingo\Api\Routing\Helpers;
 use Cache;
 
@@ -23,6 +24,8 @@ class DashboardController extends Controller
 
     $activeUsers = [];
 
+    Widget::where('on_dashboard', 1)->orderBy([['row', 'asc'], ['col', 'asc']])->get();
+
     if($users){
       foreach ( $users as $user )
       {
@@ -33,7 +36,7 @@ class DashboardController extends Controller
     }
     
 
-    return ['users' => $activeUsers];
+    return ['users' => $activeUsers, 'widgets' => $widgets];
   }
 
 
