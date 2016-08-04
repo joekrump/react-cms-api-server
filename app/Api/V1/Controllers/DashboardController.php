@@ -16,27 +16,12 @@ class DashboardController extends Controller
 
   public function index()
   {
-    $currentUser = JWTAuth::parseToken()->authenticate();
-
-    $users = User::where([['id', '!=', $currentUser->id], ['logged_in', '=', 1]])
-                        ->orderBy('name', 'ASC')
-                        ->get(['email', 'name', 'id', 'logged_in']);
-
-    $activeUsers = [];
+    // $currentUser = JWTAuth::parseToken()->authenticate();
 
     $widgets = Widget::where('on_dashboard', 1)->orderBy('row', 'asc')->orderBy('col', 'asc')->get();
-
-    if($users){
-      foreach ( $users as $user )
-      {
-        if(Cache::has('user-is-online-' . $user->id)){
-          $activeUsers[] = $user;
-        }
-      } 
-    }
     
 
-    return ['widgetData' => [$widgets->first()->id => $activeUsers], 'widgets' => $widgets];
+    return compact('widgets');
   }
 
 

@@ -12,6 +12,8 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
 	$api->get('dashboard', 'App\Api\V1\Controllers\DashboardController@index');
 
+	
+
 	// the user has to be an admin or have the create-users permissions before they can access the routes in this group
 	// 
 	$api->group(['middleware' => ['ability:admin,users']], function($api){
@@ -24,7 +26,8 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->post('assign-role', 'App\Api\V1\Controllers\UserController@assignRole');
 		// Route to attache permission to a role
 		$api->post('attach-permission', 'App\Api\V1\Controllers\UserController@attachPermission');
-		// get list of users
+		// get list of active users
+		$api->get('users/active', 'App\Api\V1\Controllers\UserController@activeUsers');
 	});
 
 	// Routes accessible by User with admin role, or with a role that has 'manage-users' or 'manage-user-account' permission assigned to it.

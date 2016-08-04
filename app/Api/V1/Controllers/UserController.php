@@ -33,6 +33,27 @@ class UserController extends Controller
       return response()->json(['auth'=>Auth::user(), 'items'=>User::all(['id', 'name as primary', 'email as secondary'])]);
   }
 
+  public function activeUsers(){
+    $currentUser = JWTAuth::parseToken()->authenticate();
+
+    $users = User::where([['id', '!=', $currentUser->id], ['logged_in', '=', 1]])
+                        ->orderBy('name', 'ASC')
+                        ->get(['email', 'name', 'id', 'logged_in']);
+
+    $activeUsers = [];
+
+    if($users){
+      foreach ( $users as $user )
+      {
+        if(Cache::has('user-is-online-' . $user->id)){
+          $activeUsers[] = $user;
+        }
+      } 
+    }
+
+    return compact('activeUsers');
+  }
+
 
   public function store(Request $request)
   {
