@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Permission;
 use App\Role;
 use App\User;
+use App\Widget;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,14 +19,21 @@ class DatabaseSeeder extends Seeder
 
       Model::unguard();
       
-      
+      DB::table('widgets')->delete();
       DB::table('role_user')->delete();
       DB::table(Config::get('auth.table'))->delete();
       DB::table('roles')->delete();
       DB::table('permissions')->delete();
       DB::table('permission_role')->delete();
-      // Clear table, likely 'users'
-      // 
+
+
+
+      $activeUserWidget = Widget::create([
+        'name' => 'Active Users', 
+        'row' => 1,
+        'col' => 1,
+        'size' => 1
+      ]);
       
       $adminRole = Role::create(['name' => 'admin']);
       $basicRole = Role::create(['name' => 'basic']);

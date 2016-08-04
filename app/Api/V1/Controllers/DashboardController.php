@@ -24,7 +24,7 @@ class DashboardController extends Controller
 
     $activeUsers = [];
 
-    Widget::where('on_dashboard', 1)->orderBy([['row', 'asc'], ['col', 'asc']])->get();
+    $widgets = Widget::where('on_dashboard', 1)->orderBy('row', 'asc')->orderBy('col', 'asc')->get();
 
     if($users){
       foreach ( $users as $user )
