@@ -32,7 +32,8 @@ class DatabaseSeeder extends Seeder
         'name' => 'Active Users', 
         'row' => 1,
         'col' => 1,
-        'size' => 1
+        'size' => 1,
+        'widget_name' => 'ActiveUsersWidget'
       ]);
       
       $adminRole = Role::create(['name' => 'admin']);
