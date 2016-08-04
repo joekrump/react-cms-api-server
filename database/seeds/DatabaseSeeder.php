@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         'row' => 1,
         'col' => 1,
         'size' => 1,
-        'widget_name' => 'ActiveUsersWidget'
+        'component_name' => 'ActiveUsersWidget'
       ]);
       
       $adminRole = Role::create(['name' => 'admin']);
