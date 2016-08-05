@@ -16,6 +16,8 @@ use Log;
 use Dingo\Api\Routing\Helpers;
 use Cache;
 
+use App\Jobs\LogoutInactiveUser;
+
 class UserController extends Controller
 {
   use Helpers;
@@ -48,6 +50,9 @@ class UserController extends Controller
       {
         if(Cache::has('user-is-online-' . $user->id)){
           $activeUsers[] = $user;
+        } else {
+          // if they were not in the cache but had logged_in set to true, then set it to false.
+          $this->dispatch(new LogoutInactiveUser($user));
         }
       } 
     }
