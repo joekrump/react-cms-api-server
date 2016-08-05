@@ -13,6 +13,8 @@ class LogoutInactiveUser extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
+    protected $user;
+    
     /**
      * Create a new job instance.
      *
@@ -31,7 +33,7 @@ class LogoutInactiveUser extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $user->logged_in = false;
-        $user->save();
+        $this->user->logged_in = false;
+        $this->user->save();
     }
 }

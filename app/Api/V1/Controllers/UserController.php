@@ -24,14 +24,7 @@ class UserController extends Controller
 
   public function index()
   {
-      // NOTE: Original 
       // $currentUser = JWTAuth::parseToken()->authenticate();
-      // return $currentUser
-      //     ->books()
-      //     ->orderBy('created_at', 'DESC')
-      //     ->get()
-      //     ->toArray();
-      //     
       
       return response()->json(['auth'=>Auth::user(), 'items'=>User::all(['id', 'name as primary', 'email as secondary'])]);
   }
