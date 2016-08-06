@@ -5,6 +5,8 @@ namespace App\Api\V1\Controllers;
 use JWTAuth;
 use Validator;
 use Config;
+use Cache;
+use Carbon\Carbon;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
@@ -32,7 +34,7 @@ class AuthController extends Controller
         }
 
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->response->errorUnauthorized();
             }
         } catch (JWTException $e) {
@@ -40,6 +42,11 @@ class AuthController extends Controller
         }
 
         $user = JWTAuth::toUser($token);
+
+        // Put an entry in cache saying that the user is online
+        $expiresAt = Carbon::now()->addMinutes(5);
+        Cache::put('user-is-online-' . $user->id, true, $expiresAt);
+
         $user->logged_in = true;
         $user->save();
 
