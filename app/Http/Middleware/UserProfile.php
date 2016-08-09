@@ -35,10 +35,13 @@ class UserProfile extends BaseMiddleware
           return $this->respond('tymon.jwt.user_not_found', 'user_not_found', 404);
         }
 
-        $userToEditId = $request->get('id');
-        
-        // If the User making this request doesn't match up to the id (User id) that has been passed as a param, or if they don't have sufficient Role/Permissions to access then return 401.
-        if (($userToEditId != $user->id) && !$request->user()->ability(explode('|', $roles), explode('|', $permissions), array('validate_all' => $validateAll))) {
+        // The the id of the User that is to be edited matches the id of the authorized User, then return early.        
+        if($request->id == $user->id){
+            return $next($request);
+        }
+
+        // If the User doesn't have sufficient Role/Permissions to access then return 401.
+        if (!$request->user()->ability(explode('|', $roles), explode('|', $permissions), array('validate_all' => $validateAll))) {
           return $this->respond('tymon.jwt.invalid', 'token_invalid_permissions', 401, 'Unauthorized');
         }
 

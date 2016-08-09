@@ -22,9 +22,12 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->post('permission', 'App\Api\V1\Controllers\Admin\UserController@createPermission');
 		// Route to assign role to user
 		$api->post('assign-role', 'App\Api\V1\Controllers\Admin\UserController@assignRole');
-		// Route to attache permission to a role
+
+		// Route to attach permission to a role
 		$api->post('attach-permission', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
+		
 		// get list of active users
+		// 
 		$api->get('users/active', 'App\Api\V1\Controllers\Admin\UserController@activeUsers');
 
 		$api->post('user/create', 'App\Api\V1\Controllers\Admin\UserController@store');
