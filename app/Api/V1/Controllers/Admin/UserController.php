@@ -31,7 +31,7 @@ class UserController extends Controller
   {
       // $currentUser = JWTAuth::parseToken()->authenticate();
       
-    return response()->json(['auth'=>Auth::user(), 'items'=>User::all(['id', 'name as primary', 'email as secondary'])]);
+    return response()->json(['auth'=>Auth::user(), 'items'=>User::get(['id', 'name as primary', 'email as secondary'])]);
   }
 
   public function activeUsers(){
@@ -98,7 +98,7 @@ class UserController extends Controller
 
     $user = User::find($id);
     if(!$user) {
-      return $this->response->error('could_not_find_user', 500);
+      return $this->response->error('could_not_find_user', 404);
     }
 
     $acceptedInput = $request->only(['name', 'email', 'password']);
@@ -110,9 +110,7 @@ class UserController extends Controller
     ]);
 
     if ($validator->fails()) {
-      // throw new \Dingo\Api\Exception\UpdateResourceFailedException('Could not update the user.', $validator->errors());
-      // return $this->response->error($validator->errors(), 201);
-      return response('test', 422)->header('Access-Control-Allow-Origin', 'http://localapp:3000');
+      throw new \Dingo\Api\Exception\UpdateResourceFailedException('Could not update the user.', $validator->errors());
     }
 
     if($request->has('password')){
@@ -161,5 +159,15 @@ class UserController extends Controller
     $role->attachPermission($permission);
 
     return response()->json("created");
+  }
+
+  public function destroy(Request $request, $id) {
+    if($user = User::find($id)) {
+      if($user->delete())
+        return $this->response->noContent()->setStatusCode(200);
+      else
+        return $this->response->error('could_not_remove_user', 500);
+    }
+    return $this->response->error('could_not_find_to_delete', 404);
   }
 }

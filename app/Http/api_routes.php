@@ -38,6 +38,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
 	$api->group(['middleware' => ['user_clearance:admin,users|user_profile']], function($api){
 		$api->post('user/{id}/update', 'App\Api\V1\Controllers\Admin\UserController@update');
+		$api->delete('user/{id}', 'App\Api\V1\Controllers\Admin\UserController@destroy');
 	});
 });
 
