@@ -86,7 +86,7 @@ class UserController extends Controller
       if($user->save())
         return $this->response->item($user, new UserTransformer)->setStatusCode(200);
       else
-          return $this->response->error('could_not_create_user', 500);
+        return $this->response->error('could_not_create_user', 500);
   }
 
     /**
@@ -94,9 +94,39 @@ class UserController extends Controller
    * @param  Request $request - contains data for creating a new user
    * @return Dingo\Api\Http\Response - an api response.
    */
-  public function update(Request $request){
-    $currentUser = JWTAuth::parseToken()->authenticate();
-    // TODO: add logic for updating a user.
+  public function update(Request $request, $id){
+
+    $user = User::find($id);
+    if(!$user) {
+      return $this->response->error('could_not_find_user', 500);
+    }
+
+    $acceptedInput = $request->only(['name', 'email', 'password']);
+   
+    $validator = Validator::make($acceptedInput, [
+        'name' => 'max:255|alpha_spaces',
+        'email' => 'email|unique:users,email,' . $id, // exclude the User being updated from Users list being used to get list of existing emails addresses.
+        'password' => 'min:7'
+    ]);
+
+    if ($validator->fails()) {
+      throw new \Dingo\Api\Exception\UpdateResourceFailedException('Could not update the user.', $validator->errors());
+    }
+
+    if($request->has('password')){
+      $user->password = $request->get('password');
+    }
+    if($request->has('name')){
+      $user->name = $request->get('name');
+    }
+    if($request->has('email')){
+      $user->email = $request->get('email');
+    }
+
+    if($user->save())
+      return $this->response->item($user, new UserTransformer)->setStatusCode(200);
+    else
+      return $this->response->error('could_not_update_user', 500);
   }
 
   public function createRole(Request $request){
