@@ -15,18 +15,22 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Log;
 use Dingo\Api\Routing\Helpers;
 use Cache;
+use App\Http\Requests\StoreUserRequest;
+use Validator;
 
 use App\Jobs\LogoutInactiveUser;
 
 class UserController extends Controller
 {
   use Helpers;
+  use UserTransformer;
+  
 
   public function index()
   {
       // $currentUser = JWTAuth::parseToken()->authenticate();
       
-      return response()->json(['auth'=>Auth::user(), 'items'=>User::all(['id', 'name as primary', 'email as secondary'])]);
+    return response()->json(['auth'=>Auth::user(), 'items'=>User::all(['id', 'name as primary', 'email as secondary'])]);
   }
 
   public function activeUsers(){
@@ -56,18 +60,28 @@ class UserController extends Controller
 
   public function store(Request $request)
   {
-      $currentUser = JWTAuth::parseToken()->authenticate();
+      // $currentUser = JWTAuth::parseToken()->authenticate();
 
-      $book = new Book;
+      // $userParams = $request->only(['name', 'email', 'password']);
 
-      $book->title = $request->get('title');
-      $book->author_name = $request->get('author_name');
-      $book->pages_count = $request->get('pages_count');
+      $validator = Validator::make($request->only(['name', 'email', 'password']), [
+          'name' => 'required|max:255|alpha_spaces',
+          'email' => 'required|email|unique:users',
+          'password' => 'required|min:7'
+      ]);
 
-      if($currentUser->books()->save($book))
-          return $this->response->created();
+
+      if ($validator->fails()) {
+        throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new user.', $validator->errors());
+      }
+
+
+      $user = new User($request->only(['name', 'email', 'password']));
+
+      if($user->save())
+        return $this->response->item($user, new UserTransformer)->setStatusCode(200);
       else
-          return $this->response->error('could_not_create_book', 500);
+          return $this->response->error('could_not_create_user', 500);
   }
 
   public function createRole(Request $request){

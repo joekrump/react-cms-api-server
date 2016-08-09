@@ -28,6 +28,8 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->post('attach-permission', 'App\Api\V1\Controllers\UserController@attachPermission');
 		// get list of active users
 		$api->get('users/active', 'App\Api\V1\Controllers\UserController@activeUsers');
+
+		$api->post('user/create', 'App\Api\V1\Controllers\UserController@store');
 	});
 
 	// Routes accessible by User with admin role, or with a role that has 'manage-users' or 'manage-user-account' permission assigned to it.
