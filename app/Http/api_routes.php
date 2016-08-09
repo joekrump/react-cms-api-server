@@ -12,8 +12,6 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
 	$api->get('dashboard', 'App\Api\V1\Controllers\DashboardController@index');
 
-	
-
 	// the user has to be an admin or have the create-users permissions before they can access the routes in this group
 	// 
 	$api->group(['middleware' => ['ability:admin,users']], function($api){
@@ -30,15 +28,12 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->get('users/active', 'App\Api\V1\Controllers\UserController@activeUsers');
 
 		$api->post('user/create', 'App\Api\V1\Controllers\UserController@store');
+
+		$api->get('users', 'App\Api\V1\Controllers\UserController@index');
 	});
 
-	// Routes accessible by User with admin role, or with a role that has 'manage-users' or 'manage-user-account' permission assigned to it.
-	//
-	$api->group(['middleware' => ['ability:admin,users|user-account']], function($api){
-		// TODO: add edit user profile should be here.
-		// 
-		// get list of users
-		$api->get('users', 'App\Api\V1\Controllers\UserController@index');
+	$api->group(['middleware' => ['user_clearance:admin,users|user_profile']], function($api){
+		$api->post('user/{id}/update', 'App\Api\V1\Controllers\UserController@update');
 	});
 });
 

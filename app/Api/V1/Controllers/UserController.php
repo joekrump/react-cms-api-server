@@ -15,7 +15,6 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Log;
 use Dingo\Api\Routing\Helpers;
 use Cache;
-use App\Http\Requests\StoreUserRequest;
 use Validator;
 
 use App\Jobs\LogoutInactiveUser;
@@ -26,7 +25,6 @@ use App\Transformers\UserTransformer;
 class UserController extends Controller
 {
   use Helpers;
-
 
 
   public function index()
