@@ -20,11 +20,14 @@ use Validator;
 
 use App\Jobs\LogoutInactiveUser;
 
+use App\Transformers\UserTransformer;
+
+
 class UserController extends Controller
 {
   use Helpers;
-  use UserTransformer;
-  
+
+
 
   public function index()
   {
