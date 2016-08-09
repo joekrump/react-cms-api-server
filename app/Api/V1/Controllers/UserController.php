@@ -65,28 +65,24 @@ class UserController extends Controller
    */
   public function store(Request $request)
   {
-      // $currentUser = JWTAuth::parseToken()->authenticate();
-
-      // $userParams = $request->only(['name', 'email', 'password']);
-
-      $validator = Validator::make($request->only(['name', 'email', 'password']), [
-          'name' => 'required|max:255|alpha_spaces',
-          'email' => 'required|email|unique:users',
-          'password' => 'required|min:7'
-      ]);
+    $validator = Validator::make($request->only(['name', 'email', 'password']), [
+        'name' => 'required|max:255|alpha_spaces',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:7'
+    ]);
 
 
-      if ($validator->fails()) {
-        throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new user.', $validator->errors());
-      }
+    if ($validator->fails()) {
+      throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new user.', $validator->errors());
+    }
 
 
-      $user = new User($request->only(['name', 'email', 'password']));
+    $user = new User($request->only(['name', 'email', 'password']));
 
-      if($user->save())
-        return $this->response->item($user, new UserTransformer)->setStatusCode(200);
-      else
-        return $this->response->error('could_not_create_user', 500);
+    if($user->save())
+      return $this->response->item($user, new UserTransformer)->setStatusCode(200);
+    else
+      return $this->response->error('could_not_create_user', 500);
   }
 
     /**
