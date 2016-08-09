@@ -7,15 +7,14 @@ return [
      |--------------------------------------------------------------------------
      |
 
-     | allowedOrigins, allowedHeaders and allowedMethods can be set to array('*') 
-     | to accept any value, the allowed methods however have to be explicitly listed.
+     | allowedOrigins, allowedHeaders and allowedMethods can be set to array('*')
+     | to accept any value.
      |
      */
     'supportsCredentials' => false,
-    'allowedOrigins' => ['*'],
-    // 'allowedOrigins' => ['http://localhost:3000'],
-    'allowedHeaders' => ['*'],
-    'allowedMethods' => ['GET', 'POST', 'PUT',  'DELETE'],
+    'allowedOrigins' => ['http://localapp:3000', 'http://localhost:3000', 'http://localhost:8000'],
+    'allowedHeaders' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
+    'allowedMethods' => ['PUT', 'POST', 'GET', 'DELETE'],
     'exposedHeaders' => [],
     'maxAge' => 0,
     'hosts' => [],

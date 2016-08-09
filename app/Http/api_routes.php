@@ -1,5 +1,6 @@
 <?php
-	
+
+
 $api = app('Dingo\Api\Routing\Router');
 
 // Routes requiring Auth

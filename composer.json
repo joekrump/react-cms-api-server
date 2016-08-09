@@ -9,8 +9,9 @@
         "laravel/framework": "5.2.*",
 	    "tymon/jwt-auth": "0.5.*",
         "dingo/api": "1.0.*@dev",
-        "barryvdh/laravel-cors": "^0.7.1",
-        "zizaco/entrust": "dev-laravel-5"
+        "zizaco/entrust": "dev-laravel-5",
+        "stripe/stripe-php": "^3.20",
+        "barryvdh/laravel-cors": "^0.8.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -23,8 +24,7 @@
     },
     "autoload": {
         "classmap": [
-            "database",
-            "transformers"
+            "database"
         ],
         "psr-4": {
             "App\\": "app/"

@@ -15,6 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -32,11 +33,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'cors',
             // 'throttle:60,1',
         ],
         'api-auth' => [
-            'cors',
             'api.auth',
             'last_active'
             // 'api.throttle:60,1'

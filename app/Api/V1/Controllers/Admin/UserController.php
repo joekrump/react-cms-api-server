@@ -110,7 +110,9 @@ class UserController extends Controller
     ]);
 
     if ($validator->fails()) {
-      throw new \Dingo\Api\Exception\UpdateResourceFailedException('Could not update the user.', $validator->errors());
+      // throw new \Dingo\Api\Exception\UpdateResourceFailedException('Could not update the user.', $validator->errors());
+      // return $this->response->error($validator->errors(), 201);
+      return response('test', 422)->header('Access-Control-Allow-Origin', 'http://localapp:3000');
     }
 
     if($request->has('password')){
