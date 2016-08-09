@@ -60,7 +60,11 @@ class UserController extends Controller
     return compact('activeUsers');
   }
 
-
+  /**
+   * Method for handling a request to create and save a new User.
+   * @param  Request $request - contains data for creating a new user
+   * @return Dingo\Api\Http\Response - an api response.
+   */
   public function store(Request $request)
   {
       // $currentUser = JWTAuth::parseToken()->authenticate();
@@ -87,6 +91,16 @@ class UserController extends Controller
           return $this->response->error('could_not_create_user', 500);
   }
 
+    /**
+   * Method for handling a request to update an existing user.
+   * @param  Request $request - contains data for creating a new user
+   * @return Dingo\Api\Http\Response - an api response.
+   */
+  public function update(Request $request){
+    $currentUser = JWTAuth::parseToken()->authenticate();
+    // TODO: add logic for updating a user.
+  }
+
   public function createRole(Request $request){
     $role = new Role();
     $role->name = $request->input('name');
@@ -105,9 +119,7 @@ class UserController extends Controller
 
   public function assignRole(Request $request){
     $user = User::where('email', '=', $request->input('email'))->first();
-
     $role = Role::where('name', '=', $request->input('role'))->first();
-    // $user->attachRole($request->input('role'));
     $user->roles()->attach($role->id);
 
     return response()->json("created");
