@@ -36,7 +36,7 @@ class BookController extends Controller
       $book->pages_count = $request->get('pages_count');
 
       if($currentUser->books()->save($book))
-          return $this->response->created();
+          return $this->response->item($book, new BookTransformer)->setStatusCode(200);
       else
           return $this->response->error('could_not_create_book', 500);
   }
@@ -75,12 +75,12 @@ class BookController extends Controller
 
       $book = $currentUser->books()->find($id);
 
-      if(!$book)
-          throw new NotFoundHttpException;
-
-      if($book->delete())
-          return $this->response->noContent();
-      else
-          return $this->response->error('could_not_delete_book', 500);
+      if($book) {
+        if($book->delete())
+          return $this->response->noContent()->setStatusCode(200);
+        else
+          return $this->response->errorBadRequest('Could Note Remove the Book with id=' . $id);
+      }
+      return $this->response->errorNotFound('Could not Find Book to remove with an id=' . $id);
   }
 }
