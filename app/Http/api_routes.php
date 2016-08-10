@@ -7,34 +7,33 @@ $api = app('Dingo\Api\Routing\Router');
 //
 $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
+	// Basic admin routes
+	// 
 	$api->post('auth/logout', 'App\Api\V1\Controllers\AuthController@logout');
-
-	$api->resource('books', 'App\Api\V1\Controllers\Admin\BookController'); 
-
 	$api->get('dashboard', 'App\Api\V1\Controllers\Admin\DashboardController@index');
 
-	// the user has to be an admin or have the create-users permissions before they can access the routes in this group
+	
+	// User resource routes (Includes Role and Permission routes)
 	// 
-	$api->group(['middleware' => ['ability:admin,users']], function($api){
-		$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup');
-		// Route to create a new role
-		$api->post('role', 'App\Api\V1\Controllers\Admin\UserController@createRole');
-		// Route to create a new permission
-		$api->post('permission', 'App\Api\V1\Controllers\Admin\UserController@createPermission');
-		// Route to assign role to user
-		$api->post('assign-role', 'App\Api\V1\Controllers\Admin\UserController@assignRole');
+	$api->group(['middleware' => ['ability:admin|users']], function($api){
 
-		// Route to attach permission to a role
-		$api->post('attach-permission', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
-		
-		// get list of active users
-		// 
-		$api->get('users/active', 'App\Api\V1\Controllers\Admin\UserController@activeUsers');
-
-		$api->post('users', 'App\Api\V1\Controllers\Admin\UserController@store');
 		$api->get('users', 'App\Api\V1\Controllers\Admin\UserController@index');
+		$api->get('users/active', 'App\Api\V1\Controllers\Admin\UserController@activeUsers');
+		$api->post('assign-role', 'App\Api\V1\Controllers\Admin\UserController@assignRole');
+		$api->post('attach-permission', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
+		$api->post('users', 'App\Api\V1\Controllers\Admin\UserController@store');
+
+		$api->resource('roles', 'App\Api\V1\Controllers\Admin\RoleController');
+		$api->resource('permissions', 'App\Api\V1\Controllers\Admin\PermissionController');
 	});
 
+	// Book resource routes
+	// 
+	$api->group(['middleware' => ['ability:admin,books']], function($api){
+		$api->resource('books', 'App\Api\V1\Controllers\Admin\BookController');
+	});
+
+	// Special routes having to do with Users.
 	$api->group(['middleware' => ['user_clearance:admin,users|user_profile']], function($api){
 		$api->get('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@show');
 		$api->post('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@update');
@@ -51,4 +50,8 @@ $api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
 	$api->post('auth/recovery', 'App\Api\V1\Controllers\AuthController@recovery');
 	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
 	$api->post('stripe/make-payment', 'App\Api\V1\Controllers\PaymentController@process_payment');
+
+	// TODO: create middleware to check if there are any users. If there are, then disallow, otherwise allow.
+	// This allows for the creation of the first user in the system.
+	$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup');
 });

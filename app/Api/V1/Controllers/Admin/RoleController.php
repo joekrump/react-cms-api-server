@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Api\V1\Controllers\Admin;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
 use App\Role;
+
+use App\Http\Controllers\Controller;
 
 /**
  * Role resource representation.
@@ -43,7 +45,9 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $role = new Role();
+        $role->name = $request->input('name');
+        $role->save();
     }
 
     /**

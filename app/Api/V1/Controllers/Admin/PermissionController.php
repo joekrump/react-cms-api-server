@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Api\V1\Controllers\Admin;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
+use App\Http\Controllers\Controller;
 
 class PermissionController extends Controller
 {
@@ -36,7 +38,9 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $permission = new Permission();
+        $permission->name = $request->input('name');
+        $permission->save();
     }
 
     /**

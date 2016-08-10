@@ -21,29 +21,13 @@ use App\Transformers\UserTransformer;
 /**
  * User resource representation.
  * 
- * @Resource("Users", uri="/users")
+ * @Resource("User", uri="/users")
  */
 class UserController extends Controller
 {
   use Helpers;
 
   /** ROLES AND PERMISSIONS **/
-
-  public function createRole(Request $request){
-    $role = new Role();
-    $role->name = $request->input('name');
-    $role->save();
-
-    return response()->json("created");    
-  }
-
-  public function createPermission(Request $request){
-    $viewUsers = new Permission();
-    $viewUsers->name = $request->input('name');
-    $viewUsers->save();
-
-    return response()->json("created");      
-  }
 
   public function assignRole(Request $request){
     $user = User::where('email', '=', $request->input('email'))->first();
