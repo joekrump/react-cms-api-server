@@ -58,6 +58,13 @@ class UserController extends Controller
     return compact('activeUsers');
   }
 
+  public function details(Request $request, $id){
+    if($user = User::find($id)){
+      return $this->response->item($user, new UserTransformer)->setStatusCode(200);
+    } 
+    return $this->response->error('Could not Find User', 404);
+  }
+
   /**
    * Method for handling a request to create and save a new User.
    * @param  Request $request - contains data for creating a new user

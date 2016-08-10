@@ -12,7 +12,8 @@ return [
      |
      */
     'supportsCredentials' => false,
-    'allowedOrigins' => ['http://localapp:3000', 'http://localhost:3000', 'http://localhost:8000'],
+    'allowedOrigins' => ['*'],
+    // 'allowedOrigins' => ['http://localapp:3000', 'http://localhost:3000', 'http://localhost:8000'],
     'allowedHeaders' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
     'allowedMethods' => ['PUT', 'POST', 'GET', 'DELETE'],
     'exposedHeaders' => [],
