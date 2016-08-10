@@ -36,7 +36,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 	// Special routes having to do with Users.
 	$api->group(['middleware' => ['user_clearance:admin,users|user_profile']], function($api){
 		$api->get('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@show');
-		$api->post('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@update');
+		$api->put('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@update');
 		$api->delete('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@destroy');
 	});
 });

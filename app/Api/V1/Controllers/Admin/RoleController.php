@@ -64,7 +64,10 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        if($role = Role::find($id)){
+          return $this->response->item($role, new RoleTransformer)->setStatusCode(200);
+        } 
+        return  $this->response->errorNotFound('Could Not Find details for Role with id=' . $id);
     }
 
     /**

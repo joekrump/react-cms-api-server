@@ -64,7 +64,10 @@ class PermissionController extends Controller
      */
     public function show($id)
     {
-        //
+        if($permission = Permission::find($id)){
+          return $this->response->item($permission, new PermissionTransformer)->setStatusCode(200);
+        } 
+        return  $this->response->errorNotFound('Could Not Find details for Permission with id=' . $id);
     }
 
     /**
