@@ -8,6 +8,13 @@ use App\Http\Requests;
 
 use App\Http\Controllers\Controller;
 
+use App\Permission;
+
+/**
+ * Permission resource representation.
+ * 
+ * @Resource("Permission", uri="/permissions")
+ */
 class PermissionController extends Controller
 {
     /**
@@ -17,7 +24,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['items'=>Permission::get(['id', 'name AS primary'])]);
     }
 
     /**

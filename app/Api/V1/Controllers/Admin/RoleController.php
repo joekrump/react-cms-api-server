@@ -24,7 +24,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['items'=>Role::get(['id', 'name AS primary'])]);
     }
 
     /**
