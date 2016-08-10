@@ -15,7 +15,7 @@ return [
     'allowedOrigins' => ['*'],
     // 'allowedOrigins' => ['http://localapp:3000', 'http://localhost:3000', 'http://localhost:8000'],
     'allowedHeaders' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'Access-Control-Allow-Origin'],
-    'allowedMethods' => ['PUT', 'POST', 'GET', 'DELETE'],
+    'allowedMethods' => ['PUT', 'POST', 'GET', 'PATCH', 'DELETE'],
     'exposedHeaders' => [],
     'maxAge' => 0,
     'hosts' => [],

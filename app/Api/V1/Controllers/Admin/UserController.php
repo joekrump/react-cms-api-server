@@ -6,19 +6,15 @@ use App\Permission;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Log;
 use Dingo\Api\Routing\Helpers;
 use Cache;
 use Validator;
-
 use App\Jobs\LogoutInactiveUser;
-
 use App\Transformers\UserTransformer;
 
 
@@ -26,13 +22,41 @@ class UserController extends Controller
 {
   use Helpers;
 
+  /** ROLES AND PERMISSIONS **/
 
-  public function index()
-  {
-      // $currentUser = JWTAuth::parseToken()->authenticate();
-      
-    return response()->json(['auth'=>Auth::user(), 'items'=>User::get(['id', 'name as primary', 'email as secondary'])]);
+  public function createRole(Request $request){
+    $role = new Role();
+    $role->name = $request->input('name');
+    $role->save();
+
+    return response()->json("created");    
   }
+
+  public function createPermission(Request $request){
+    $viewUsers = new Permission();
+    $viewUsers->name = $request->input('name');
+    $viewUsers->save();
+
+    return response()->json("created");      
+  }
+
+  public function assignRole(Request $request){
+    $user = User::where('email', '=', $request->input('email'))->first();
+    $role = Role::where('name', '=', $request->input('role'))->first();
+    $user->roles()->attach($role->id);
+
+    return response()->json("created");
+  }
+
+  public function attachPermission(Request $request){
+    $role = Role::where('name', '=', $request->input('role'))->first();
+    $permission = Permission::where('name', '=', $request->input('name'))->first();
+    $role->attachPermission($permission);
+
+    return response()->json("created");
+  }
+
+  /** UNIQUE ACCESSOR METHODS  */
 
   public function activeUsers(){
     $currentUser = JWTAuth::parseToken()->authenticate();
@@ -43,7 +67,11 @@ class UserController extends Controller
 
     $activeUsers = [];
 
-    if($users){
+    // Loop through Users that are supposedly logged in and see if there is a none-expired
+    // Cache entry for them. If there is then they are actually active, if not, they should be set as being
+    // logged out.
+    // TODO: logged_in should perhaps be refactored to `is_active`
+    if($users->count()){
       foreach ( $users as $user )
       {
         if(Cache::has('user-is-online-' . $user->id)){
@@ -58,12 +86,7 @@ class UserController extends Controller
     return compact('activeUsers');
   }
 
-  public function details(Request $request, $id){
-    if($user = User::find($id)){
-      return $this->response->item($user, new UserTransformer)->setStatusCode(200);
-    } 
-    return $this->response->error('Could not Find User', 404);
-  }
+  /** CRUD METHODS **/
 
   /**
    * Method for handling a request to create and save a new User.
@@ -72,31 +95,50 @@ class UserController extends Controller
    */
   public function store(Request $request)
   {
-      // $currentUser = JWTAuth::parseToken()->authenticate();
-
-      // $userParams = $request->only(['name', 'email', 'password']);
-
-      $validator = Validator::make($request->only(['name', 'email', 'password']), [
-          'name' => 'required|max:255|alpha_spaces',
-          'email' => 'required|email|unique:users',
-          'password' => 'required|min:7'
-      ]);
+    $validator = Validator::make($request->only(['name', 'email', 'password']), [
+        'name' => 'required|max:255|alpha_spaces',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:7'
+    ]);
 
 
-      if ($validator->fails()) {
-        throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new user.', $validator->errors());
-      }
+    if ($validator->fails()) {
+      throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new user.', $validator->errors());
+    }
 
 
-      $user = new User($request->only(['name', 'email', 'password']));
+    $user = new User($request->only(['name', 'email', 'password']));
 
-      if($user->save())
-        return $this->response->item($user, new UserTransformer)->setStatusCode(200);
-      else
-        return $this->response->error('could_not_create_user', 500);
+    if($user->save())
+      return $this->response->item($user, new UserTransformer)->setStatusCode(200);
+    else
+      return $this->response->error('could_not_create_user', 500);
   }
 
-    /**
+  /**
+   * Return a list of Users
+   * @return Response
+   */
+  public function index()
+  { 
+    // TODO: PAGINATE THIS
+    return response()->json(['items'=>User::get(['id', 'name AS primary', 'email AS secondary'])]);
+  }
+
+  /**
+   * Return details for a specific User
+   * @param  Request $request - HTTP Request from the client
+   * @param  int     $id      - The id of the User to get details for
+   * @return Dingo\Api\Http\Response 
+   */
+  public function show(Request $request, $id){
+    if($user = User::find($id)){
+      return $this->response->item($user, new UserTransformer)->setStatusCode(200);
+    } 
+    return  $this->response->errorNotFound('Could Not Find details for User with id=' . $id);
+  }
+
+  /**
    * Method for handling a request to update an existing user.
    * @param  Request $request - contains data for creating a new user
    * @return Dingo\Api\Http\Response - an api response.
@@ -134,38 +176,6 @@ class UserController extends Controller
       return $this->response->item($user, new UserTransformer)->setStatusCode(200);
     else
       return $this->response->error('could_not_update_user', 500);
-  }
-
-  public function createRole(Request $request){
-    $role = new Role();
-    $role->name = $request->input('name');
-    $role->save();
-
-    return response()->json("created");    
-  }
-
-  public function createPermission(Request $request){
-    $viewUsers = new Permission();
-    $viewUsers->name = $request->input('name');
-    $viewUsers->save();
-
-    return response()->json("created");      
-  }
-
-  public function assignRole(Request $request){
-    $user = User::where('email', '=', $request->input('email'))->first();
-    $role = Role::where('name', '=', $request->input('role'))->first();
-    $user->roles()->attach($role->id);
-
-    return response()->json("created");
-  }
-
-  public function attachPermission(Request $request){
-    $role = Role::where('name', '=', $request->input('role'))->first();
-    $permission = Permission::where('name', '=', $request->input('name'))->first();
-    $role->attachPermission($permission);
-
-    return response()->json("created");
   }
 
   public function destroy(Request $request, $id) {

@@ -31,15 +31,14 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		// 
 		$api->get('users/active', 'App\Api\V1\Controllers\Admin\UserController@activeUsers');
 
-		$api->post('user/create', 'App\Api\V1\Controllers\Admin\UserController@store');
-
+		$api->post('users', 'App\Api\V1\Controllers\Admin\UserController@store');
 		$api->get('users', 'App\Api\V1\Controllers\Admin\UserController@index');
 	});
 
 	$api->group(['middleware' => ['user_clearance:admin,users|user_profile']], function($api){
-		$api->get('user/{id}', 'App\Api\V1\Controllers\Admin\UserController@details');
-		$api->post('user/{id}/update', 'App\Api\V1\Controllers\Admin\UserController@update');
-		$api->delete('user/{id}', 'App\Api\V1\Controllers\Admin\UserController@destroy');
+		$api->get('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@show');
+		$api->post('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@update');
+		$api->delete('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@destroy');
 	});
 });
 
