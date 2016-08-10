@@ -18,6 +18,30 @@ use Validator;
 class RoleController extends Controller
 {
   use Helpers;
+
+
+  /**
+   * Attach a permission to a Role
+   * @param  Request $request 
+   * @return Dingo\Api\Http\Response
+   */
+  public function attachPermission(Request $request){
+    $permission = Permission::find($request->input('permission_id'));
+    $role = Role::find($request->input('role_id'));
+    if($permission) {
+      if($role) {
+        $role->permissions()->attach($permission->id);
+      } else {
+        return $this->response->errorNotFound('Could Not Find details for Role with id=' . $request->input('role_id'));
+      }
+    } else {
+      return $this->response->errorNotFound('Could Not Find details for Permission with id=' . $request->input('permission_id'));
+    }
+    
+    return $this->response->item($role, new RoleTransformer)->setStatusCode(200);
+  }
+
+
   /**
    * Display a listing of the resource.
    *

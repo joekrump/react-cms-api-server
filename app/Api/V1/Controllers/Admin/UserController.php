@@ -29,20 +29,25 @@ class UserController extends Controller
 
   /** ROLES AND PERMISSIONS **/
 
+  /**
+   * Assign a Role to a User
+   * @param  Request $request - should container user_id and role_id
+   * @return Dingo\Api\Http\Response
+   */
   public function assignRole(Request $request){
-    $user = User::where('email', '=', $request->input('email'))->first();
-    $role = Role::where('name', '=', $request->input('role'))->first();
-    $user->roles()->attach($role->id);
-
-    return response()->json("created");
-  }
-
-  public function attachPermission(Request $request){
-    $role = Role::where('name', '=', $request->input('role'))->first();
-    $permission = Permission::where('name', '=', $request->input('name'))->first();
-    $role->attachPermission($permission);
-
-    return response()->json("created");
+    $user = User::find($request->input('user_id'));
+    $role = Role::find($request->input('role_id'));
+    if($user) {
+      if($role) {
+        $user->roles()->attach($role->id);
+      } else {
+        return $this->response->errorNotFound('Could Not Find details for Role with id=' . $request->input('role_id'));
+      }
+    } else {
+      return $this->response->errorNotFound('Could Not Find details for Role with id=' . $request->input('user_id'));
+    }
+    
+    return $this->response->item($user, new UserTransformer)->setStatusCode(200);
   }
 
   /** UNIQUE ACCESSOR METHODS  */
@@ -83,7 +88,7 @@ class UserController extends Controller
    * @Get("/")
    * @Versions({"v1"})
    * 
-   * @return Response
+   * @return Dingo\Api\Http\Response
    */
   public function index()
   { 
@@ -105,11 +110,9 @@ class UserController extends Controller
         'password' => 'required|min:7'
     ]);
 
-
     if ($validator->fails()) {
       throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new user.', $validator->errors());
     }
-
 
     $user = new User($request->only(['name', 'email', 'password']));
 
