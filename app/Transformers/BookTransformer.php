@@ -16,6 +16,7 @@ class BookTransformer extends TransformerAbstract
     public function transform(Book $book)
     {
         return [
+            'id'          => $book->id,
             'title'       => $book->title,
             'author_name' => $book->author_name,
             'pages_count' => $book->pages_count,
