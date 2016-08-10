@@ -8,6 +8,8 @@ use App\Http\Requests;
 
 use App\Http\Controllers\Controller;
 
+use Dingo\Api\Routing\Helpers;
+
 use App\Permission;
 
 use App\Transformers\PermissionTransformer;
@@ -19,6 +21,7 @@ use App\Transformers\PermissionTransformer;
  */
 class PermissionController extends Controller
 {
+    use Helpers;
     /**
      * Display a listing of the resource.
      *

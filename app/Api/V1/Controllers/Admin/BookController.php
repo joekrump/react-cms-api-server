@@ -21,7 +21,7 @@ class BookController extends Controller
           ->orderBy('created_at', 'DESC')
           ->get();
 
-      $this->response->collection($books, new BookTransformer);
+      return $this->response->collection($books, new BookTransformer);
   }
 
 

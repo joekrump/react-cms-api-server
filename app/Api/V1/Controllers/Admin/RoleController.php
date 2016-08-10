@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 
 use App\Transformers\RoleTransformer;
 
+use Dingo\Api\Routing\Helpers;
+
 /**
  * Role resource representation.
  * 
@@ -19,6 +21,7 @@ use App\Transformers\RoleTransformer;
  */
 class RoleController extends Controller
 {
+    use Helpers;
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +29,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = User::all();
+        $roles = Role::all();
         return $this->response->collection($roles, new RoleTransformer);
     }
 

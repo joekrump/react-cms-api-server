@@ -5,7 +5,7 @@ namespace App\Transformers;
 use League\Fractal\TransformerAbstract;
 use App\Book;
 
-class RoleTransformer extends TransformerAbstract
+class BookTransformer extends TransformerAbstract
 {
 
     /**
