@@ -115,7 +115,8 @@ class UserController extends Controller
   public function index()
   { 
     // TODO: PAGINATE THIS
-    return response()->json(['items'=>User::get(['id', 'name AS primary', 'email AS secondary'])]);
+    $users = User::all();
+    return $this->response->collection($users, new UserTransformer);
   }
 
   /**

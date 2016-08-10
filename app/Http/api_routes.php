@@ -15,7 +15,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 	
 	// User resource routes (Includes Role and Permission routes)
 	// 
-	$api->group(['middleware' => ['ability:admin|users']], function($api){
+	$api->group(['middleware' => ['ability:admin,users']], function($api){
 
 		$api->get('users', 'App\Api\V1\Controllers\Admin\UserController@index');
 		$api->get('users/active', 'App\Api\V1\Controllers\Admin\UserController@activeUsers');

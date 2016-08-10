@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 
 use App\Permission;
 
+use App\Transformers\PermissionTransformer;
+
 /**
  * Permission resource representation.
  * 
@@ -24,7 +26,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        return response()->json(['items'=>Permission::get(['id', 'name AS primary'])]);
+        return response()->json(['items'=> Permission::get(['id', 'display_name AS primary', 'description AS secondary'])]);
     }
 
     /**

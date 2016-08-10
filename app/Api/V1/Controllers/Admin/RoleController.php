@@ -10,6 +10,8 @@ use App\Role;
 
 use App\Http\Controllers\Controller;
 
+use App\Transformers\RoleTransformer;
+
 /**
  * Role resource representation.
  * 
@@ -24,7 +26,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return response()->json(['items'=>Role::get(['id', 'name AS primary'])]);
+        return response()->json(['items'=>Role::get(['id', 'display_name AS primary', 'description AS secondary'])]);
     }
 
     /**
