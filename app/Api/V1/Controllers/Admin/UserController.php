@@ -18,6 +18,11 @@ use Validator;
 use App\Jobs\LogoutInactiveUser;
 use App\Transformers\UserTransformer;
 
+/**
+ * User resource representation.
+ * 
+ * @Resource("Users", uri="/users")
+ */
 class UserController extends Controller
 {
   use Helpers;
@@ -116,7 +121,11 @@ class UserController extends Controller
   }
 
   /**
-   * Return a list of Users
+   * Get a JSON representation of all all Users.
+   *
+   * @Get("/")
+   * @Versions({"v1"})
+   * 
    * @return Response
    */
   public function index()
@@ -126,7 +135,14 @@ class UserController extends Controller
   }
 
   /**
-   * Return details for a specific User
+   * Get a JSON representation of all a User.
+   *
+   * @Get("/{id}")
+   * @Versions({"v1"})
+   * @Parameters({
+   *      @Parameter("id", description="The id of the user to view", default=null),
+   * })
+   * 
    * @param  Request $request - HTTP Request from the client
    * @param  int     $id      - The id of the User to get details for
    * @return Dingo\Api\Http\Response 
