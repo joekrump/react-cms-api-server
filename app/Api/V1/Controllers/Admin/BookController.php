@@ -8,6 +8,8 @@ use JWTAuth;
 use App\Book;
 use Dingo\Api\Routing\Helpers;
 
+use App\Transformers\BookTransformer;
+
 class BookController extends Controller
 {
   use Helpers;
@@ -15,10 +17,11 @@ class BookController extends Controller
   public function index()
   {
       $currentUser = JWTAuth::parseToken()->authenticate();
-      return ['items' => $currentUser
-          ->books()
+      $books = $currentUser->books()
           ->orderBy('created_at', 'DESC')
-          ->get(['id', 'title as primary', 'author_name as secondary'])];
+          ->get();
+
+      $this->response->collection($books, new BookTransformer);
   }
 
 
