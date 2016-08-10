@@ -14,9 +14,9 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Dingo\Api\Routing\Helpers;
 use Cache;
 use Validator;
+
 use App\Jobs\LogoutInactiveUser;
 use App\Transformers\UserTransformer;
-
 
 class UserController extends Controller
 {
@@ -175,16 +175,22 @@ class UserController extends Controller
     if($user->save())
       return $this->response->item($user, new UserTransformer)->setStatusCode(200);
     else
-      return $this->response->error('could_not_update_user', 500);
+      return $this->response->errorBadRequest('Could not Update User with id=' . $id);
   }
 
+  /**
+   * Handle a request to remove a User from the DB
+   * @param  Request $request - The request to remove the User
+   * @param  int     $id      - The id of the User to remove
+   * @return Dingo\Api\Http\Response - A response for the client
+   */
   public function destroy(Request $request, $id) {
     if($user = User::find($id)) {
       if($user->delete())
         return $this->response->noContent()->setStatusCode(200);
       else
-        return $this->response->error('could_not_remove_user', 500);
+        return $this->response->errorBadRequest('Could Note Remove the User with id=' . $id);
     }
-    return $this->response->error('could_not_find_to_delete', 404);
+    return $this->response->errorNotFound('Could not Find User to remove with an id=' . $id);
   }
 }
