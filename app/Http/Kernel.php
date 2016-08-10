@@ -59,5 +59,6 @@ class Kernel extends HttpKernel
         'ability' => \App\Http\Middleware\TokenEntrustAbility::class,
         'last_active' => \App\Http\Middleware\LogLastUserActivity::class,
         'user_clearance' => \App\Http\Middleware\UserProfile::class,
+        'signup_permission' => \App\Http\Middleware\AllowSignupAccess::class
     ];
 }

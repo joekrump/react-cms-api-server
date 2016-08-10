@@ -3,6 +3,20 @@
 
 $api = app('Dingo\Api\Routing\Router');
 
+
+// Routes without Auth requirement
+// 
+$api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
+
+	$api->post('auth/login', 'App\Api\V1\Controllers\AuthController@login');
+	$api->post('auth/recovery', 'App\Api\V1\Controllers\AuthController@recovery');
+	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
+	$api->post('stripe/make-payment', 'App\Api\V1\Controllers\PaymentController@process_payment');
+
+	$api->get('users/count', 'App\Api\V1\Controllers\UserController@count');
+	$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup')->middleware('signup_permission');
+});
+
 // Routes requiring Auth
 //
 $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
@@ -41,17 +55,3 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 	});
 });
 
-
-// Routes without Auth requirement
-// 
-$api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
-
-	$api->post('auth/login', 'App\Api\V1\Controllers\AuthController@login');
-	$api->post('auth/recovery', 'App\Api\V1\Controllers\AuthController@recovery');
-	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
-	$api->post('stripe/make-payment', 'App\Api\V1\Controllers\PaymentController@process_payment');
-
-	// TODO: create middleware to check if there are any users. If there are, then disallow, otherwise allow.
-	// This allows for the creation of the first user in the system.
-	$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup');
-});
