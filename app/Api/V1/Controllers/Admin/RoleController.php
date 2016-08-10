@@ -22,11 +22,12 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Dingo\Api\Http\Response 
      */
     public function index()
     {
-        return response()->json(['items'=>Role::get(['id', 'display_name AS primary', 'description AS secondary'])]);
+        $roles = User::all();
+        return $this->response->collection($roles, new RoleTransformer);
     }
 
     /**

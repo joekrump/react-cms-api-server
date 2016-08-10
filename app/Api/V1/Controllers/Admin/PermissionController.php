@@ -22,11 +22,12 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Dingo\Api\Http\Response 
      */
     public function index()
     {
-        return response()->json(['items'=> Permission::get(['id', 'display_name AS primary', 'description AS secondary'])]);
+        $permissions = Permission::all();
+        return $this->response->collection($permissions, new PermissionTransformer);
     }
 
     /**

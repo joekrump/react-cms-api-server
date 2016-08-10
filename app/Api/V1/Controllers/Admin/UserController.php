@@ -78,6 +78,21 @@ class UserController extends Controller
   /** CRUD METHODS **/
 
   /**
+   * Get a JSON representation of all all Users.
+   *
+   * @Get("/")
+   * @Versions({"v1"})
+   * 
+   * @return Response
+   */
+  public function index()
+  { 
+    // TODO: PAGINATE THIS
+    $users = User::all();
+    return $this->response->collection($users, new UserTransformer);
+  }
+
+  /**
    * Method for handling a request to create and save a new User.
    * @param  Request $request - contains data for creating a new user
    * @return Dingo\Api\Http\Response - an api response.
@@ -102,21 +117,6 @@ class UserController extends Controller
       return $this->response->item($user, new UserTransformer)->setStatusCode(200);
     else
       return $this->response->error('could_not_create_user', 500);
-  }
-
-  /**
-   * Get a JSON representation of all all Users.
-   *
-   * @Get("/")
-   * @Versions({"v1"})
-   * 
-   * @return Response
-   */
-  public function index()
-  { 
-    // TODO: PAGINATE THIS
-    $users = User::all();
-    return $this->response->collection($users, new UserTransformer);
   }
 
   /**
