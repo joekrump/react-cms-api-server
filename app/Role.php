@@ -6,6 +6,11 @@ class Role extends EntrustRole
 {
   
   protected $visible = ['id', 'name', 'permissions'];
+
+  protected $fillable = [
+      'name', 'display_name', 'description',
+  ];
+
   /**
    * @return Illuminate\Database\Eloquent\Model
    */

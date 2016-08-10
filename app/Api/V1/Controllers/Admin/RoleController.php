@@ -3,16 +3,12 @@
 namespace App\Api\V1\Controllers\Admin;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-
 use App\Role;
-
 use App\Http\Controllers\Controller;
-
 use App\Transformers\RoleTransformer;
-
 use Dingo\Api\Routing\Helpers;
+use Validator;
 
 /**
  * Role resource representation.
@@ -34,16 +30,6 @@ class RoleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -51,9 +37,24 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $role = new Role();
-        $role->name = $request->input('name');
-        $role->save();
+        $validator = Validator::make($request->only(['name', 'display_name', 'description']), [
+            'name' => 'required|max:100|unique:roles,name',
+            'display_name' => 'required|max:100|unique:roles,display_name',
+            'description' => 'required|max:255'
+        ]);
+
+
+        if ($validator->fails()) {
+          throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new Role.', $validator->errors());
+        }
+
+
+        $role = new Role($request->only(['name', 'display_name', 'description']));
+
+        if($role->save())
+          return $this->response->item($role, new RoleTransformer)->setStatusCode(200);
+        else
+          return $this->response->errorBadRequest('Could Not Create Role');
     }
 
     /**
@@ -71,17 +72,6 @@ class RoleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -90,7 +80,38 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $role = Role::find($id);
+        if(!$role) {
+          return $this->response->errorNotFound('Could Not Find Role with id=' . $id);
+        }
+
+        $acceptedInput = $request->only(['name', 'display_name', 'description']);
+        
+        $validator = Validator::make($acceptedInput, [
+            'name' => 'max:100|unique:roles,name,' . $id,
+            'display_name' => 'max:100|unique:roles,display_name,' . $id,
+            'description' => 'max:255'
+        ]);
+
+        if ($validator->fails()) {
+          throw new \Dingo\Api\Exception\UpdateResourceFailedException('Could not update the role.', $validator->errors());
+        }
+
+        if($request->has('name')){
+          $role->name = $request->get('name');
+        }
+        if($request->has('display_name')){
+          $role->display_name = $request->get('display_name');
+        }
+        if($request->has('description')){
+          $role->description = $request->get('description');
+        }
+
+        if($role->save())
+          return $this->response->item($role, new RoleTransformer)->setStatusCode(200);
+        else
+          return $this->response->errorBadRequest('Could not Update Role with id=' . $id);
     }
 
     /**
@@ -101,6 +122,12 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if($role = Role::find($id)) {
+          if($role->delete())
+            return $this->response->noContent()->setStatusCode(200);
+          else
+            return $this->response->errorBadRequest('Could Note Remove the Role with id=' . $id);
+        }
+        return $this->response->errorNotFound('Could not Find Role to remove with an id=' . $id);
     }
 }

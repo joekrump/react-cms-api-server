@@ -116,7 +116,7 @@ class UserController extends Controller
     if($user->save())
       return $this->response->item($user, new UserTransformer)->setStatusCode(200);
     else
-      return $this->response->error('could_not_create_user', 500);
+      return $this->response->errorBadRequest('Could Not Create User');
   }
 
   /**
@@ -148,7 +148,7 @@ class UserController extends Controller
 
     $user = User::find($id);
     if(!$user) {
-      return $this->response->error('could_not_find_user', 404);
+      return $this->response->errorNotFound('Could Not Find User with id=' . $id);
     }
 
     $acceptedInput = $request->only(['name', 'email', 'password']);

@@ -3,16 +3,12 @@
 namespace App\Api\V1\Controllers\Admin;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-
 use App\Http\Controllers\Controller;
-
 use Dingo\Api\Routing\Helpers;
-
 use App\Permission;
-
 use App\Transformers\PermissionTransformer;
+use Validator;
 
 /**
  * Permission resource representation.
@@ -34,16 +30,6 @@ class PermissionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -51,9 +37,24 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $permission = new Permission();
-        $permission->name = $request->input('name');
-        $permission->save();
+        $validator = Validator::make($request->only(['name', 'display_name', 'description']), [
+            'name' => 'required|max:100|unique:permissions,name',
+            'display_name' => 'required|max:100|unique:permissions,display_name',
+            'description' => 'required|max:255'
+        ]);
+
+
+        if ($validator->fails()) {
+          throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not create new Permission.', $validator->errors());
+        }
+
+
+        $permission = new Permission($request->only(['name', 'display_name', 'description']));
+
+        if($permission->save())
+          return $this->response->item($permission, new PermissionTransformer)->setStatusCode(200);
+        else
+          return $this->response->errorBadRequest('Could Not Create Permission');
     }
 
     /**
@@ -71,17 +72,6 @@ class PermissionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -90,7 +80,37 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $permission = Permission::find($id);
+        if(!$permission) {
+          return $this->response->errorNotFound('Could Not Find Permission with id=' . $id);
+        }
+
+        $acceptedInput = $request->only(['name', 'display_name', 'description']);
+        
+        $validator = Validator::make($acceptedInput, [
+            'name' => 'max:100|unique:permissions,name,' . $id,
+            'display_name' => 'max:100', 
+            'description' => 'max:255'
+        ]);
+
+        if ($validator->fails()) {
+          throw new \Dingo\Api\Exception\UpdateResourceFailedException('Could not update the permission.', $validator->errors());
+        }
+
+        if($request->has('name')){
+          $permission->name = $request->get('name');
+        }
+        if($request->has('display_name')){
+          $permission->display_name = $request->get('display_name');
+        }
+        if($request->has('description')){
+          $permission->description = $request->get('description');
+        }
+
+        if($permission->save())
+          return $this->response->item($permission, new PermissionTransformer)->setStatusCode(200);
+        else
+          return $this->response->errorBadRequest('Could not Update Permission with id=' . $id);
     }
 
     /**
@@ -101,6 +121,12 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if($permission = Permission::find($id)) {
+          if($permission->delete())
+            return $this->response->noContent()->setStatusCode(200);
+          else
+            return $this->response->errorBadRequest('Could Note Remove the Permission with id=' . $id);
+        }
+        return $this->response->errorNotFound('Could not Find Permission to remove with an id=' . $id);
     }
 }
