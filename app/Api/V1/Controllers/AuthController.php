@@ -21,6 +21,19 @@ class AuthController extends Controller
 {
     use Helpers;
 
+    public function refresh_token() {
+        $token = JWTAuth::getToken();
+        if(!$token){
+            throw new BadRequestHtttpException('Token not provided');
+        }
+        try{
+            $token = JWTAuth::refresh($token);
+        }catch(TokenInvalidException $e){
+            throw new AccessDeniedHttpException('The token is invalid');
+        }
+        return $this->response->withArray(['token'=>$token]);
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->only(['email', 'password']);
