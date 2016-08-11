@@ -21,6 +21,10 @@ class AuthController extends Controller
 {
     use Helpers;
 
+    /**
+     * Handles receiving an expired token and then trying to generate a new one
+     * @return [type] [description]
+     */
     public function refresh_token() {
         $token = JWTAuth::getToken();
         if(!$token){

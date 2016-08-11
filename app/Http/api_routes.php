@@ -8,7 +8,7 @@ $api = app('Dingo\Api\Routing\Router');
 // 
 $api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
 
-	$api->get('auth/refresh', 'App\Api\V1\Controllers\AuthController@refresh_token');
+	// $api->get('auth/refresh', 'App\Api\V1\Controllers\AuthController@refresh_token');
 	$api->post('auth/login', 'App\Api\V1\Controllers\AuthController@login');
 	$api->post('auth/recovery', 'App\Api\V1\Controllers\AuthController@recovery');
 	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
