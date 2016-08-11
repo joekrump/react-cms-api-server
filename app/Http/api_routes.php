@@ -6,6 +6,8 @@ $api = app('Dingo\Api\Routing\Router');
 
 // Routes without Auth requirement
 // 
+
+
 $api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
 
 	$api->post('auth/login', 'App\Api\V1\Controllers\AuthController@login');
@@ -14,7 +16,8 @@ $api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
 	$api->post('stripe/make-payment', 'App\Api\V1\Controllers\PaymentController@process_payment');
 
 	$api->get('users/count', 'App\Api\V1\Controllers\UserController@count');
-	$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup')->middleware('signup_permission');
+
+	$api->post('auth/signup', 'App\Api\V1\Controllers\AuthController@signup')->middleware(['cors', 'signup_permission']);
 });
 
 // Routes requiring Auth

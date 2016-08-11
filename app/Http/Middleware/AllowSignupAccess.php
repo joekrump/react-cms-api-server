@@ -18,7 +18,7 @@ class AllowSignupAccess
     public function handle($request, Closure $next)
     {
         if(User::all()->count() > 0) {
-            return $this->respond('Access to Signup no allowed', 'Signup allowed only if no User present', 401);
+            return response('Access to Signup no allowed', 401);
         }
         return $next($request);
     }

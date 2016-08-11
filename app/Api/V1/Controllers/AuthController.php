@@ -8,6 +8,7 @@ use Config;
 use Cache;
 use Carbon\Carbon;
 use App\User;
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Dingo\Api\Routing\Helpers;
@@ -69,12 +70,15 @@ class AuthController extends Controller
             throw new ValidationHttpException($validator->errors()->all());
         }
 
-        User::unguard();
-        $user = User::create($userData);
-        User::reguard();
+        $user = new User($userData);
 
-        if(!$user->id) {
+        if(!$user->save()) {
             return $this->response->error('could_not_create_user', 500);
+        } else {
+            // Because signup process should only be allowed to occur for first user, 
+            // make that user an admin.
+            $adminRole = Role::where('name', 'admin')->first();
+            $user->roles()->attach($adminRole->id);
         }
 
         if($hasToReleaseToken) {
