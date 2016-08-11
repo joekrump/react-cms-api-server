@@ -37,7 +37,8 @@ class Kernel extends HttpKernel
         ],
         'api-auth' => [
             'api.auth',
-            'last_active'
+            'last_active',
+            'jwt.refresh',
             // 'api.throttle:60,1'
         ]
     ];
