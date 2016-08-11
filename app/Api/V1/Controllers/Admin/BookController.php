@@ -47,10 +47,10 @@ class BookController extends Controller
 
       $book = $currentUser->books()->find($id);
 
-      if(!$book)
-          throw new NotFoundHttpException; 
-
-      return $book;
+      if($book){
+        return $this->response->item($book, new BookTransformer)->setStatusCode(200);
+      } 
+      return  $this->response->errorNotFound('Could Not Find details for Book with id=' . $id);
   }
 
   public function update(Request $request, $id)
