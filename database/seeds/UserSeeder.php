@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
     $adminUser = new User();
     $adminUser->name = 'admin';
     $adminUser->email = 'admin@test.com';
-    $adminUser->password = bcrypt('testing');
+    $adminUser->password = 'testing';
     $adminUser->save();
     $adminUser->roles()->attach($adminRole);
 
