@@ -21,7 +21,7 @@ class CreatePageTable extends Migration
             $table->boolean('deleteable')->default(true);
             $table->boolean('draft')->default(true);
             $table->integer('position');
-            $table->integer('template_id')->unsigned();
+            $table->integer('template_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@ class CreatePagePartsTable extends Migration
     {
         Schema::create('page_parts', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('page_id')->unsigned();
+            $table->integer('page_id')->unsigned()->nullable();
             $table->foreign('page_id')->references('id')->on('pages');
             $table->string('title');
             $table->text('content');

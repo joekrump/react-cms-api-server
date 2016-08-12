@@ -17,8 +17,11 @@ class RoleSeeder extends Seeder
     DB::table('role_user')->delete();
     DB::table('roles')->delete();
 
-    $adminRole = Role::create(['name' => 'admin']);
-    $basicRole = Role::create(['name' => 'basic']);
+    $adminRole = new Role(['name' => 'admin', 'display_name' => 'Admin']);
+    $basicRole = new Role(['name' => 'basic', 'display_name' => 'Basic']);
+
+    $adminRole->save();
+    $basicRole->save();
 
     $userAccountPermission = Permission::where('name', 'user-account')->first();
     $userPermission = Permission::where('name', 'users')->first();

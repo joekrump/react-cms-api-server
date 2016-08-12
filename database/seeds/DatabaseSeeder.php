@@ -2,10 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use App\Permission;
-use App\Role;
-use App\User;
-use App\Widget;
 
 class DatabaseSeeder extends Seeder
 {

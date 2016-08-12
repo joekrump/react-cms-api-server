@@ -31,9 +31,9 @@ class UserSeeder extends Seeder
 
     // Make some Basic Users
     // 
-    factory(App\User::class, 10)->create()->each(function($u) {
+    factory(App\User::class, 10)->create()->each(function($u) use ($basicRole){
       $u->roles()->attach($basicRole);
-    })
+    });
   }
 }
 
