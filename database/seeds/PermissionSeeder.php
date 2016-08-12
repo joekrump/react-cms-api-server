@@ -16,7 +16,7 @@ class PermissionSeeder extends Seeder
     DB::table('permission_role')->delete();
     DB::table('permissions')->delete();
 
-    Permission::create(['name' => 'users']);
-    Permission::create(['name' => 'user-account']);
+    Permission::create(['name' => 'users', 'display_name' => 'User Permissions', 'description' => 'Allows Read and Delete Access for Users']);
+    Permission::create(['name' => 'user-account', 'display_name' => 'User Account Permissions', 'description' => 'Allow Write Access to Users']);
   }
 }
