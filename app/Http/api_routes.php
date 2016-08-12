@@ -1,8 +1,6 @@
 <?php
 
-
 $api = app('Dingo\Api\Routing\Router');
-
 
 // Routes without Auth requirement
 // 
