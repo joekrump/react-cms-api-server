@@ -4,7 +4,6 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use JWTAuth;
 use Dingo\Api\Routing\Helpers;
 use App\Helpers\UnitConversionHelper;
 

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use JWTAuth;
 use App\Book;
 use Dingo\Api\Routing\Helpers;
-
 use App\Transformers\BookTransformer;
 
 class BookController extends Controller
