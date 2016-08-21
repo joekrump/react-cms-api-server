@@ -63,7 +63,7 @@ class BookController extends Controller
       $book->fill($request->all());
 
       if($book->save())
-          return $this->response->noContent();
+          return $this->response->item($book, new BookTransformer)->setStatusCode(200);
       else
           return $this->response->error('could_not_update_book', 500);
   }
