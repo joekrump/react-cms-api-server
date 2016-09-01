@@ -32,4 +32,14 @@ class Page extends Model
     {
         return $this->hasMany('App\PagePart');
     }
+
+    public function contents() {
+      $partsWithContent = '';
+
+      foreach($this->parts as $part) {
+        $partsWithContent .= $part->content;
+      }
+
+      return $partsWithContent;
+    }
 }
