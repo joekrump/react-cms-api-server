@@ -16,8 +16,15 @@ class PageTransformer extends TransformerAbstract
     public function transform(Page $page)
     {
         return [
-            'primary'     => $book->title,
-            'secondary'   => $book->slug
+            'name'        => $page->name,
+            'full_path'   => $page->full_path,
+            'in_menu'     => $page->in_menu,
+            'position'    => $page->position,
+            'deleteable'  => $page->deleteable,
+            'draft'       => $page->draft,
+            'template_id' => $page->template_id,
+            'primary'     => $page->name,
+            // 'secondary'   => $page->full_path
         ];
     }
 
