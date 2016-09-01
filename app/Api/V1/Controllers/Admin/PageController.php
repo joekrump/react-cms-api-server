@@ -40,7 +40,7 @@ class PageController extends Controller
     if($page->save()){
 
       // Assign content for the page.
-      $page_content = $request->get('content');
+      $page_content = $request->get('contents');
         // If the content is longer than 21000 characters then split it amongst multiple page parts to
         // ensure content isn't trucated
         // 
@@ -52,7 +52,7 @@ class PageController extends Controller
         }
         $page->parts()->saveMany($page_parts);
       } else {
-        $page->parts()->save($$page_content);
+        $page->parts()->save(new PagePart(['content' => $page_content]));
       }
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
@@ -80,19 +80,57 @@ class PageController extends Controller
     if(!$page)
       throw new NotFoundHttpException;
 
-    $page->fill($request->all());
+    $page->fill($request->except('contents'));
 
-    if($page->save())
-      return $this->response->noContent()->setStatusCode(200);
-    else
+    if($page->save()){
+      // Assign content for the page.
+      $page_content = $request->get('contents');
+      
+      // If the content is longer than 21000 characters then split it amongst multiple page parts to
+      // ensure content isn't trucated
+      // 
+      if($page_content && (strlen($page_content) > 21000)) {
+        $content_chunks = str_split($page_content);
+        $existing_page_parts = $page->parts;
+        $num_existing_parts = $existing_page_parts->count();
+
+        $page_parts = [];
+        $i = 0;
+        foreach($content_chunks as $chunk) {
+          if($num_existing_parts > ($i + 1)) {
+            $existing_page_parts[$i]['content'] = $chunk;
+            $existing_page_parts[$i]->save();
+          } else {
+            $page_parts[] = new PagePart(['content' => $chunk]);
+          } 
+        }
+
+        if($page_parts.length > 0) {
+          $page->parts()->saveMany($page_parts);
+        }
+        
+      } else {
+        $num_parts = $page->parts()->count();
+        $first_page_part = $page->parts()->first();
+        $first_page_part->content = $page_content;
+        $first_page_part->save();
+
+        if($num_parts > 1) {
+          $other_part_ids = $page->parts()->whereNotIn([$first_page_part->id])->lists('page_parts.id');
+          PagePart::whereIn($other_part_ids)->delete();
+        }
+      }
+
+      return $this->response->item($page, new PageTransformer)->setStatusCode(200);
+    } else {
       return $this->response->error('could_not_update_page', 500);
+    }
   }
 
   public function destroy($id)
   {
-    $currentUser = JWTAuth::parseToken()->authenticate();
 
-    $page = $currentUser->pages()->find($id);
+    $page = Page::find($id);
 
     if($page) {
       if($page->delete())
