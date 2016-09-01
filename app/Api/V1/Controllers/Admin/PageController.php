@@ -82,7 +82,15 @@ class PageController extends Controller
     if(!$page)
       throw new NotFoundHttpException;
 
-    $page->fill($request->except('contents'));
+    $page->name = $request->get('name');
+    
+    if(($template_id = $request->get('template_id'))){
+      $page->template_id = $template_id;
+    }
+
+    if(($full_path = $request->get('full_path'))){
+      $page->full_path = $full_path;
+    }
 
     if($page->save()){
       // Assign content for the page.
