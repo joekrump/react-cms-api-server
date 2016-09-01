@@ -30,7 +30,9 @@ class PageController extends Controller
 
     $page = new Page;
 
-    $page->fill($request->all());
+    // dd($request->except('contents'));
+    $page->name         = $request->get('name');
+    $page->full_path    = '/' . $page->name;
     $page->template_id  = $request->get('template_id');
 
     // TODO:
@@ -44,7 +46,7 @@ class PageController extends Controller
         // If the content is longer than 21000 characters then split it amongst multiple page parts to
         // ensure content isn't trucated
         // 
-      if($page_content.length > 21000) {
+      if($page_content && (strlen($page_content) > 21000)) {
         $content_chunks = str_split($page_content);
         $page_parts = [];
         foreach($content_chunks as $chunk) {
@@ -131,6 +133,7 @@ class PageController extends Controller
   {
 
     $page = Page::find($id);
+    $page->parts()->delete();
 
     if($page) {
       if($page->delete())
