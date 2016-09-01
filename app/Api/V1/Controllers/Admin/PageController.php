@@ -16,9 +16,7 @@ class PageController extends Controller
   public function index()
   {
       $currentUser = JWTAuth::parseToken()->authenticate();
-      $pages = $currentUser->pages()
-          ->orderBy('created_at', 'DESC')
-          ->get();
+      $pages = Page::all();
 
       return $this->response->collection($pages, new PageTransformer);
   }
