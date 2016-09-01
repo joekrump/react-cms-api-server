@@ -7,82 +7,79 @@ use App\Http\Controllers\Controller;
 use JWTAuth;
 use App\Page;
 use Dingo\Api\Routing\Helpers;
+use App\Transformers\PageTransformer;
 
 class PageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+  use Helpers;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+  public function index()
+  {
+      $currentUser = JWTAuth::parseToken()->authenticate();
+      $pages = $currentUser->pages()
+          ->orderBy('created_at', 'DESC')
+          ->get();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+      return $this->response->collection($pages, new PageTransformer);
+  }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+  public function store(Request $request)
+  {
+      $currentUser = JWTAuth::parseToken()->authenticate();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+      $page = new Page;
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+      $page->title = $request->get('title');
+      $page->author_name = $request->get('author_name');
+      $page->pages_count = $request->get('pages_count');
+
+      if($currentUser->pages()->save($page))
+          return $this->response->item($page, new PageTransformer)->setStatusCode(200);
+      else
+          return $this->response->error('could_not_create_page', 500);
+  }
+
+  public function show($id)
+  {
+      $currentUser = JWTAuth::parseToken()->authenticate();
+
+      $page = $currentUser->pages()->find($id);
+
+      if($page){
+        return $this->response->item($page, new PageTransformer)->setStatusCode(200);
+      } 
+      return  $this->response->errorNotFound('Could Not Find details for Page with id=' . $id);
+  }
+
+  public function update(Request $request, $id)
+  {
+      $currentUser = JWTAuth::parseToken()->authenticate();
+
+      $page = $currentUser->pages()->find($id);
+      if(!$page)
+          throw new NotFoundHttpException;
+
+      $page->fill($request->all());
+
+      if($page->save())
+          return $this->response->noContent();
+      else
+          return $this->response->error('could_not_update_page', 500);
+  }
+
+  public function destroy($id)
+  {
+      $currentUser = JWTAuth::parseToken()->authenticate();
+
+      $page = $currentUser->pages()->find($id);
+
+      if($page) {
+        if($page->delete())
+          return $this->response->noContent()->setStatusCode(200);
+        else
+          return $this->response->errorBadRequest('Could Note Remove the Page with id=' . $id);
+      }
+      return $this->response->errorNotFound('Could not Find Page to remove with an id=' . $id);
+  }
 }

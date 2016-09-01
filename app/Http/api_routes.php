@@ -46,6 +46,10 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->resource('books', 'App\Api\V1\Controllers\Admin\BookController');
 	});
 
+	$api->group(['middleware' => ['ability:admin,pages']], function($api){
+		$api->resource('pages', 'App\Api\V1\Controllers\Admin\PageController');
+	});
+
 	// Special routes having to do with Users.
 	$api->group(['middleware' => ['user_clearance:admin,users|user_profile']], function($api){
 		$api->get('users/{id}', 'App\Api\V1\Controllers\Admin\UserController@show');
