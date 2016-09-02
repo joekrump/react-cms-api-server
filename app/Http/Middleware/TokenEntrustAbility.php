@@ -6,9 +6,12 @@ use Closure;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Middleware\BaseMiddleware;
+use Dingo\Api\Routing\Helpers;
 
 class TokenEntrustAbility extends BaseMiddleware
 {
+  use Helpers;
+
   public function handle($request, Closure $next, $roles, $permissions, $validateAll = false)
   {
 
@@ -19,17 +22,19 @@ class TokenEntrustAbility extends BaseMiddleware
     try {
       $user = $this->auth->authenticate($token);
     } catch (TokenExpiredException $e) {
-      return $this->respond('tymon.jwt.expired', 'token_expired', $e->getStatusCode(), [$e]);
+      return $this->response->error('Token Expired', $e->getStatusCode());
     } catch (JWTException $e) {
-      return $this->respond('tymon.jwt.invalid', 'token_invalid', $e->getStatusCode(), [$e]);
+      return $this->response->error('Token Invalid', $e->getStatusCode());
+    } catch (Exception $e) {
+      return $this->response->error('Something funny happened', 500);
     }
 
     if (! $user) {
-      return $this->respond('tymon.jwt.user_not_found', 'user_not_found', 404);
+      return $this->response->error('User Not Found', 404);
     }
 
     if (!$request->user()->ability(explode('|', $roles), explode('|', $permissions), array('validate_all' => $validateAll))) {
-      return $this->respond('tymon.jwt.invalid', 'token_invalid_permissions', 401, 'Unauthorized');
+      return $this->response->error('Invalid Token Permissions', 401);
     }
 
     $this->events->fire('tymon.jwt.valid', $user);

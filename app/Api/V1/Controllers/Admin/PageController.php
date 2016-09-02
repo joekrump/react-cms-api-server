@@ -47,7 +47,7 @@ class PageController extends Controller
         // ensure content isn't trucated
         // 
       if($page_content && (strlen($page_content) > 21000)) {
-        $content_chunks = str_split($page_content);
+        $content_chunks = str_split($page_content, 21000);
         $page_parts = [];
         foreach($content_chunks as $chunk) {
           $page_parts[] = new PagePart(['content' => $chunk]);
@@ -95,14 +95,14 @@ class PageController extends Controller
     if($page->save()){
       // Assign content for the page.
       $page_content = $request->get('contents');
-      
       // If the content is longer than 21000 characters then split it amongst multiple page parts to
       // ensure content isn't trucated
       // 
       if($page_content && (strlen($page_content) > 21000)) {
-        $content_chunks = str_split($page_content);
+        $content_chunks = str_split($page_content, 21000);
         $existing_page_parts = $page->parts;
         $num_existing_parts = $existing_page_parts->count();
+        $num_chunks = count($content_chunks);
 
         $page_parts = [];
         $i = 0;
@@ -110,24 +110,38 @@ class PageController extends Controller
           if($num_existing_parts > ($i + 1)) {
             $existing_page_parts[$i]['content'] = $chunk;
             $existing_page_parts[$i]->save();
+            $i++;
           } else {
             $page_parts[] = new PagePart(['content' => $chunk]);
           } 
         }
 
-        if($page_parts.length > 0) {
+        // If there are few parts than previously, delete the extra parts.
+        // 
+        if($num_existing_parts > $num_chunks) {
+          $part_ids_to_remove = [];
+
+          return $this->response->array(['num_to_delete' => $num_existing_parts - $num_chunks])->setStatusCode(200);
+
+          for($j = $i; $j < $num_existing_parts; $j++){
+            $part_ids_to_remove[] = $num_existing_parts[$j]->id;
+          }
+          PagePart::whereIn('id',$part_ids_to_remove)->delete();
+        }
+
+        if(count($page_parts) > 0) {
           $page->parts()->saveMany($page_parts);
         }
         
       } else {
         $num_parts = $page->parts()->count();
-        $first_page_part = $page->parts()->first();
+        $first_page_part = $page->parts->first();
         $first_page_part->content = $page_content;
         $first_page_part->save();
-
+        // dd($first_page_part);
         if($num_parts > 1) {
-          $other_part_ids = $page->parts()->whereNotIn([$first_page_part->id])->lists('page_parts.id');
-          PagePart::whereIn($other_part_ids)->delete();
+          $other_part_ids = $page->parts()->whereNotIn('id', [$first_page_part->id])->lists('page_parts.id');
+          PagePart::whereIn('id',$other_part_ids)->delete();
         }
       }
 
