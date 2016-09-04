@@ -25,7 +25,10 @@ class PageController extends Controller
   public function store(Request $request)
   { 
     if(!PageTemplate::find($request->get('template_id'))) {
-      return $this->response->error('Could not find a template with id specified', 500);
+      $template_id = 1;
+      // return $this->response->error('Could not find a template with id specified', 500);
+    } else {
+      $template_id = $request->get('template_id');
     }
 
     $page = new Page;
@@ -33,7 +36,7 @@ class PageController extends Controller
     // dd($request->except('contents'));
     $page->name         = $request->get('name');
     $page->full_path    = '/' . $page->name;
-    $page->template_id  = $request->get('template_id');
+    $page->template_id  = $template_id;
 
     // TODO:
     // ADD METHOD TO MAKE full_path for Page.
