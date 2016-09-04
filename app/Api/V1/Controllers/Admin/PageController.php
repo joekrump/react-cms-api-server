@@ -101,8 +101,8 @@ class PageController extends Controller
     if($page->save()){
       // Assign content for the page.
       //
-      $page_content = $request->get('contents');
-      
+      $page_content = $request->get('content');
+
       if($page_content){
         // If the content is longer than 21000 characters then split it amongst multiple page parts to
         // ensure content isn't trucated
