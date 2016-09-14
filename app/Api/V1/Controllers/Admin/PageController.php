@@ -45,10 +45,10 @@ class PageController extends Controller
     if($page->save()){
 
       // Assign content for the page.
-      $page_content = $request->get('contents');
-        // If the content is longer than 21000 characters then split it amongst multiple page parts to
-        // ensure content isn't trucated
-        // 
+      $page_content = $request->get('content');
+      // If the content is longer than 21000 characters then split it amongst multiple page parts to
+      // ensure content isn't trucated
+      // 
       if($page_content && (strlen($page_content) > 21000)) {
         $content_chunks = str_split($page_content, 21000);
         $page_parts = [];
@@ -56,8 +56,10 @@ class PageController extends Controller
           $page_parts[] = new PagePart(['content' => $chunk]);
         }
         $page->parts()->saveMany($page_parts);
-      } else {
+      } else if($page_content) {
         $page->parts()->save(new PagePart(['content' => $page_content]));
+      } else {
+        
       }
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
