@@ -10,6 +10,7 @@ use App\PagePart;
 use App\PageTemplate;
 use Dingo\Api\Routing\Helpers;
 use App\Transformers\PageTransformer;
+use App\Transformers\PageListTransformer;
 
 class PageController extends Controller
 {
@@ -18,7 +19,8 @@ class PageController extends Controller
   public function index()
   {
     $pages = Page::all();
-    return $this->response->collection($pages, new PageTransformer);
+
+    return $this->response->collection($pages, new PageListTransformer);
   }
 
 
@@ -75,6 +77,7 @@ class PageController extends Controller
     $page = Page::find($id);
 
     if($page){
+
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
     } 
     return  $this->response->errorNotFound('Could Not Find details for Page with id=' . $id);
