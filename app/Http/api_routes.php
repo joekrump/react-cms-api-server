@@ -48,6 +48,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
 	$api->group(['middleware' => ['ability:admin,pages']], function($api){
 		$api->resource('pages', 'App\Api\V1\Controllers\Admin\PageController');
+		$api->get('page-templates', 'App\Api\V1\Controllers\Admin\PageTemplateController@index');
 	});
 
 	// Special routes having to do with Users.
