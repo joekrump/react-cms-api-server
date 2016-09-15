@@ -18,7 +18,7 @@ class PageController extends Controller
 
   public function index()
   {
-    $pages = Page::all();
+    $pages = Page::orderBy('name', 'asc')->get();
 
     return $this->response->collection($pages, new PageListTransformer);
   }

@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use App\Page;
+use App\PageTemplate;
 
 class PageTransformer extends TransformerAbstract
 {
@@ -26,7 +27,8 @@ class PageTransformer extends TransformerAbstract
         'template_id'     => $page->template_id,
         'primary'         => $page->name,
         'use_editor'      => true,
-        'content'         => $page->contents()
+        'content'         => $page->contents(),
+        'templates'       => PageTemplate::get(['display_name', 'id'])
         // 'secondary'   => $page->full_path
       ];
   }

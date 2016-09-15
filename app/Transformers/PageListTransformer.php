@@ -23,8 +23,8 @@ class PageListTransformer extends TransformerAbstract
         'draft'           => $page->draft,
         'template_id'     => $page->template_id,
         'primary'         => $page->name,
-        'use_editor'      => true
-        // 'secondary'   => $page->full_path
+        'use_editor'      => true,
+        'secondary'       => $page->template_id
       ];
   }
 }
