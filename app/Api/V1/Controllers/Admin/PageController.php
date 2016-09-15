@@ -59,7 +59,8 @@ class PageController extends Controller
       } else if($page_content) {
         $page->parts()->save(new PagePart(['content' => $page_content]));
       } else {
-        
+        // TODO: If there is no content entered for the page should return an error message of some sort. 
+        // 
       }
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
@@ -146,13 +147,19 @@ class PageController extends Controller
           
         } else {
           $num_parts = $page->parts()->count();
-          $first_page_part = $page->parts->first();
-          $first_page_part->content = $page_content;
-          $first_page_part->save();
-          // dd($first_page_part);
-          if($num_parts > 1) {
-            $other_part_ids = $page->parts()->whereNotIn('id', [$first_page_part->id])->lists('page_parts.id');
-            PagePart::whereIn('id',$other_part_ids)->delete();
+
+          if($num_parts > 0) {
+            $first_page_part = $page->parts->first();
+            $first_page_part->content = $page_content;
+            $first_page_part->save();
+            if($num_parts > 1) {
+              $other_part_ids = $page->parts()->whereNotIn('id', [$first_page_part->id])->lists('page_parts.id');
+              PagePart::whereIn('id',$other_part_ids)->delete();
+            }
+          } else {
+            // If somehow there was no content for the page yet, create a new PagePart with content for the page.
+            // 
+            $page->parts()->save(new PagePart(['content' => $page_content]));
           }
         }
       }
