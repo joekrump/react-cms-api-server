@@ -16,8 +16,12 @@ class PageTemplateController extends Controller
      */
     public function index(Request $request)
     {
-        $pageTemplates = PageTemplate::orderBy('display_name')->get(['id', 'display_name']);
+        try {
+            $pageTemplates = PageTemplate::orderBy('display_name')->get(['id', 'display_name']);
 
-        return ['data' => $pageTemplates];
+            return ['body' => ['data' => $pageTemplates], 'statusCode' => 200];
+        } catch(Exception $e) {
+            return ['body' => $e, 'statusCode' => 500];
+        }
     }
 }
