@@ -46,8 +46,8 @@ class PageController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $slug
+     * @return 
      */
     public function show($slug)
     {

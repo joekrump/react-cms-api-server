@@ -14,6 +14,8 @@ $api->group(['middleware' => 'cors', 'version' => 'v1'], function ($api) {
 
 	$api->post('stripe/make-payment', 'App\Api\V1\Controllers\PaymentController@process_payment');
 	$api->get('users/count', 'App\Api\V1\Controllers\UserController@count');
+
+	$api->get('data/pages/{slug}', 'App\Api\V1\Controllers\PageController@show');
 });
 
 // Routes requiring Auth
