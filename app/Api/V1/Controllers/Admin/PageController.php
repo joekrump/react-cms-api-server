@@ -38,7 +38,7 @@ class PageController extends Controller
     $page->name         = $request->get('name');
     $page->template_id  = $template_id;
     // TODO needs to check if it is already taken.
-    $page->full_path = str_slug($page->name);
+    $page->full_path = "/" . str_slug($page->name);
     // 
     if($page->save()){
 
@@ -90,7 +90,7 @@ class PageController extends Controller
     if($request->get('name')){
       $page->name = $request->get('name');
       // TODO needs to check if it is already taken.
-      $page->full_path = str_slug($page->name);
+      $page->full_path = "/" . str_slug($page->name);
     }
    
     

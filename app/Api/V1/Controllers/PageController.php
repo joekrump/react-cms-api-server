@@ -46,18 +46,34 @@ class PageController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $slug
-     * @return 
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show($id)
     {
-        try {
-            $page = Page::where('full_path', $slug)->firstOrFail();
-            return $this->response->item($page, new PageTransformer)->setStatusCode(200);
-        } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return $this->response->errorNotFound('Could not Find Page');
-        } catch (Exception $e){
-            return $this->response->errorBadRequest($e);
+        //
+    }
+
+    /**
+     * Find a page based on the fullpath provided in a query param.
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function by_path(Request $request)
+    {
+        $pagePath = $request->get('fullpath');
+
+        if(!$pagePath) {
+           return $this->response->errorNotFound('Could not Find Page'); 
+        } else {
+            try {
+                $page = Page::where('full_path', $pagePath)->firstOrFail();
+                return $this->response->item($page, new PageTransformer)->setStatusCode(200);
+            } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                return $this->response->errorNotFound('Could not Find Page');
+            } catch (Exception $e){
+                return $this->response->errorBadRequest($e);
+            }
         }
     }
 
