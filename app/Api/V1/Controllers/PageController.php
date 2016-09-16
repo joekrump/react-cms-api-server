@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Page;
+use Dingo\Api\Routing\Helpers;
+use App\Transformers\PageTransformer;
 
 class PageController extends Controller
 {
+    use Helpers;
     /**
      * Display a listing of the resource.
      *
@@ -46,9 +49,16 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        try {
+            $page = Page::where('full_path', $slug)->firstOrFail();
+            return $this->response->item($page, new PageTransformer)->setStatusCode(200);
+        } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return $this->response->errorNotFound('Could not Find Page');
+        } catch (Exception $e){
+            return $this->response->errorBadRequest($e);
+        }
     }
 
     /**

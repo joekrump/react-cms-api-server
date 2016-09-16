@@ -28,7 +28,7 @@ class PageTransformer extends TransformerAbstract
         'primary'         => $page->name,
         'use_editor'      => true,
         'content'         => $page->contents(),
-        'templates'       => PageTemplate::orderBy('display_name', 'asc')->get(['display_name', 'id']);
+        'templates'       => PageTemplate::orderBy('display_name', 'asc')->get(['display_name', 'id'])
         // 'secondary'   => $page->full_path
       ];
   }

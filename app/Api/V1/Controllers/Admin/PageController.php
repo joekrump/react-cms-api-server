@@ -4,7 +4,6 @@ namespace App\Api\V1\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use JWTAuth;
 use App\Page;
 use App\PagePart;
 use App\PageTemplate;
@@ -37,12 +36,9 @@ class PageController extends Controller
 
     // dd($request->except('contents'));
     $page->name         = $request->get('name');
-    $page->full_path    = '/' . $page->name;
     $page->template_id  = $template_id;
-
-    // TODO:
-    // ADD METHOD TO MAKE full_path for Page.
-    // 
+    // TODO needs to check if it is already taken.
+    $page->full_path = str_slug($page->name);
     // 
     if($page->save()){
 
@@ -166,7 +162,6 @@ class PageController extends Controller
           }
         }
       }
-
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
     } else {
