@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Page;
 use Dingo\Api\Routing\Helpers;
 use App\Transformers\PageTransformer;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PageController extends Controller
 {
@@ -66,11 +67,14 @@ class PageController extends Controller
         if(!$pagePath) {
            return $this->response->errorNotFound('Could not Find Page'); 
         } else {
+            if($pagePath[0] != '/') {
+                $pagePath = '/' . $pagePath;
+            }
             try {
                 $page = Page::where('full_path', $pagePath)->firstOrFail();
                 return $this->response->item($page, new PageTransformer)->setStatusCode(200);
-            } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-                return $this->response->errorNotFound('Could not Find Page');
+            } catch (ModelNotFoundException $e) {
+                return $this->response->errorNotFound('Could not Find Page: ' . $pagePath);
             } catch (Exception $e){
                 return $this->response->errorBadRequest($e);
             }
