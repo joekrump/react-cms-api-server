@@ -11,6 +11,7 @@ class Page extends Model
       'in_menu',
       'deleteable',
       'draft',
+      'slug',
       'position'
     ];
 
