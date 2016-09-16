@@ -89,6 +89,8 @@ class PageController extends Controller
 
     if($request->get('name')){
       $page->name = $request->get('name');
+      // TODO needs to check if it is already taken.
+      $page->full_path = str_slug($page->name);
     }
    
     
