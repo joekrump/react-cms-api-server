@@ -34,11 +34,25 @@ class PageController extends Controller
 
     $page = new Page;
 
-    // dd($request->except('contents'));
     $page->name         = $request->get('name');
     $page->template_id  = $template_id;
     // TODO needs to check if it is already taken.
-    $page->full_path = "/" . str_slug($page->name);
+    // 
+    $page_name = $request->get('name');
+    if($page_name){
+      $page->name = $page_name;
+    }
+
+    $page_slug = $request->get('slug');
+    if($page_slug){
+      $page->slug = $page_slug;
+    } else {
+      // TODO: Make slug here.
+      // 
+      $page->slug = str_slug($page->name);
+    }
+
+    $page->full_path = "/" . $page->slug;
     // 
     if($page->save()){
 
@@ -87,19 +101,25 @@ class PageController extends Controller
     if(!$page)
       throw new NotFoundHttpException;
 
-    if($request->get('name')){
-      $page->name = $request->get('name');
-      // TODO needs to check if it is already taken.
-      $page->full_path = "/" . str_slug($page->name);
+    $page_name = $request->get('name');
+    if($page_name){
+      $page->name = $page_name;
+    }
+
+    $page_slug = $request->get('slug');
+    if($page_slug){
+      $page->slug = $page_slug;
     }
    
-    
     if(($template_id = $request->get('template_id'))){
       $page->template_id = $template_id;
     }
 
+    // TODO: make fullpath and slug in a better way...
     if(($full_path = $request->get('full_path'))){
-      $page->full_path = $full_path;
+      
+    } else if($page_slug) {
+      $page->full_path = '/' . $page->slug;
     }
 
     if($page->save()){
