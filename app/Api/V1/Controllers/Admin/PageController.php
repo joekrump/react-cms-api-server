@@ -195,9 +195,10 @@ class PageController extends Controller
   {
 
     $page = Page::find($id);
-    $page->parts()->delete();
 
-    if($page) {
+    if($page && $page->deleteable) {
+
+      $page->parts()->delete();
       if($page->delete())
         return $this->response->noContent()->setStatusCode(200);
       else
