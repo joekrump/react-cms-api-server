@@ -19,15 +19,25 @@ class PageSeeder extends Seeder
     DB::table('page_parts')->delete();
     DB::table('page_templates')->delete();
 
+    // Seed PageTemplates
+    // 
     $basicTemplate = new PageTemplate(['name' => 'basic', 'display_name' => 'Basic Page']);
     $basicTemplate->save();
 
-    $indexTemplate = new PageTemplate(['name' => 'index', 'display_name' => 'Index Template']);
-    $indexTemplate->save();
+    $contactTemplate = new PageTemplate(['name' => 'contact', 'display_name' => 'Contact Page']);
+    $contactTemplate->save();
 
-    $homeTemplate = new PageTemplate(['name' => 'home', 'display_name' => 'Home Tempalate']);
+    $homeTemplate = new PageTemplate(['name' => 'home', 'display_name' => 'Home Page']);
     $homeTemplate->save();
 
+    $loginPageTemplate = new PageTemplate(['name' => 'login', 'display_name' => 'Login Page']);
+    $loginPageTemplate->save();
+
+    $paymentPageTemplate = new PageTemplate(['name' => 'payment', 'display_name' => 'Payment Page']);
+    $paymentPageTemplate->save();
+
+    // Seed minimal Pages
+    // 
     $homePage = new Page([
       'name' => 'Home',
       'full_path' => '/',
@@ -35,8 +45,7 @@ class PageSeeder extends Seeder
       'in_menu' => false,
       'deleteable' => true,
       'draft' => false,
-      'position' => 1,
-      'template_id' => 3
+      'position' => 1
     ]);
     
     $aboutPage = new Page([
@@ -46,8 +55,7 @@ class PageSeeder extends Seeder
       'in_menu' => false,
       'deleteable' => true,
       'draft' => true,
-      'position' => 2,
-      'template_id' => 1
+      'position' => 2
     ]);
 
     $contactPage = new Page([
@@ -57,8 +65,7 @@ class PageSeeder extends Seeder
       'in_menu' => true,
       'deleteable' => false,
       'draft' => false,
-      'position' => 3,
-      'template_id' => 2
+      'position' => 3
     ]);
 
     $loginPage = new Page([
@@ -68,8 +75,7 @@ class PageSeeder extends Seeder
       'in_menu' => true,
       'deleteable' => false,
       'draft' => false,
-      'position' => 4,
-      'template_id' => 4
+      'position' => 4
     ]);
 
     $donationPage = new Page([
@@ -79,47 +85,27 @@ class PageSeeder extends Seeder
       'in_menu' => true,
       'deleteable' => false,
       'draft' => false,
-      'position' => 5,
-      'template_id' => 5
+      'position' => 5
     ]);
 
-    $basicPage->save();
-    $indexPage->save();
     $homePage->save();
+    $aboutPage->save();
+    $contactPage->save();
+    $loginPage->save();
+    $donationPage->save();
 
-    $basicPageTitle = new PagePart([
-      'title'=>'title', 
-      'content' => '<h1>Basic</h1>', 
-      'position' => 1
-    ]);
-    $indexPageTitle = new PagePart([
-      'title'=>'title', 
-      'content' => '<h1>Index</h1>', 
-      'position' => 1
-    ]);
-    $homePageTitle = new PagePart([
-      'title'=>'title', 
-      'content' => '<h1>Home</h1>', 
-      'position' => 1
-    ]);
+    // Assign tempaltes and resave.
+    $homePage->template()->associate($basicTemplate);
+    $aboutPage->template()->associate($contactTemplate);
+    $contactPage->template()->associate($homeTemplate);
+    $loginPage->template()->associate($loginPageTemplate);
+    $donationPage->template()->associate($paymentPageTemplate);
 
-    $basicPageTitle->save();
-    $indexPageTitle->save();
-    $homePageTitle->save();
-
-    $basicPage->parts()->save($basicPageTitle);
-    $indexPage->parts()->save($indexPageTitle);
-    $homePage->parts()->save($homePageTitle);
-
-    $basicPage->template()->associate($basicTemplate);
-    $indexPage->template()->associate($indexTemplate);
-    $homePage->template()->associate($homeTemplate);
-
-    $basicPage->save();
-    $indexPage->save();
     $homePage->save();
-
-
+    $aboutPage->save();
+    $contactPage->save();
+    $loginPage->save();
+    $donationPage->save();
   }
 }
 
