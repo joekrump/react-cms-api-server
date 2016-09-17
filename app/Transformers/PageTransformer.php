@@ -20,6 +20,7 @@ class PageTransformer extends TransformerAbstract
         'id'              => $page->id,
         'name'            => $page->name,
         'full_path'       => $page->full_path,
+        'slug'            => $page->slug,
         'in_menu'         => $page->in_menu,
         'position'        => $page->position,
         'deleteable'      => $page->deleteable,

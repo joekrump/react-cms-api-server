@@ -12,7 +12,8 @@ class Page extends Model
       'deleteable',
       'draft',
       'slug',
-      'position'
+      'position',
+      'template_id'
     ];
 
     public function children() {

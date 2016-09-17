@@ -28,29 +28,59 @@ class PageSeeder extends Seeder
     $homeTemplate = new PageTemplate(['name' => 'home', 'display_name' => 'Home Tempalate']);
     $homeTemplate->save();
 
-    $basicPage = new Page([
-      'name' => 'Basic',
-      'full_path' => '/basic',
-      'in_menu' => false,
-      'deleteable' => true,
-      'draft' => false,
-      'position' => 1
-    ]);
-    $indexPage = new Page([
-      'name' => 'Index',
-      'full_path' => '/index',
-      'in_menu' => false,
-      'deleteable' => true,
-      'draft' => true,
-      'position' => 2
-    ]);
     $homePage = new Page([
       'name' => 'Home',
       'full_path' => '/',
+      'slug' => '',
+      'in_menu' => false,
+      'deleteable' => true,
+      'draft' => false,
+      'position' => 1,
+      'template_id' => 3
+    ]);
+    
+    $aboutPage = new Page([
+      'name' => 'About',
+      'full_path' => '/about',
+      'slug' => 'about',
+      'in_menu' => false,
+      'deleteable' => true,
+      'draft' => true,
+      'position' => 2,
+      'template_id' => 1
+    ]);
+
+    $contactPage = new Page([
+      'name' => 'Contact Us',
+      'full_path' => '/contact',
+      'slug' => 'contact',
       'in_menu' => true,
       'deleteable' => false,
       'draft' => false,
-      'position' => 3
+      'position' => 3,
+      'template_id' => 2
+    ]);
+
+    $loginPage = new Page([
+      'name' => 'Login',
+      'full_path' => '/login',
+      'slug' => 'login',
+      'in_menu' => true,
+      'deleteable' => false,
+      'draft' => false,
+      'position' => 4,
+      'template_id' => 4
+    ]);
+
+    $donationPage = new Page([
+      'name' => 'Donate',
+      'full_path' => '/donate',
+      'slug' => 'donate',
+      'in_menu' => true,
+      'deleteable' => false,
+      'draft' => false,
+      'position' => 5,
+      'template_id' => 5
     ]);
 
     $basicPage->save();
