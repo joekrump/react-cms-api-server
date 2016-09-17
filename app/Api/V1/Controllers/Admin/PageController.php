@@ -204,6 +204,9 @@ class PageController extends Controller
       else
         return $this->response->errorBadRequest('Could Note Remove the Page with id=' . $id);
     }
+    if(!$page->deleteable) {
+      return $this->response->errorBadRequest('Could Note Remove the Page with id=' . $id . ' It is not allowed to be deleted.');
+    }
     return $this->response->errorNotFound('Could not Find Page to remove with an id=' . $id);
   }
 }
