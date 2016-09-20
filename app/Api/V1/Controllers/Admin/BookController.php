@@ -32,9 +32,17 @@ class BookController extends Controller
 
       $book = new Book;
 
-      $book->title = $request->get('title');
-      $book->author_name = $request->get('author_name');
-      $book->pages_count = $request->get('pages_count');
+      $credentials = $request->only(['title', 'author_name', 'pages_count']);
+
+      $validator = Validator::make($credentials, [
+          'title' => 'required',
+          'author_name' => 'required',
+          'pages_count' => 'required|integer|min:1',
+      ]);
+
+      if($validator->fails()) {
+          throw new ValidationHttpException($validator->errors());
+      }
 
       if($currentUser->books()->save($book))
           return $this->response->item($book, new BookTransformer)->setStatusCode(200);
