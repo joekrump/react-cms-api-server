@@ -9,7 +9,8 @@ class Page extends Model
     protected $fillable = [
       'full_path',
       'in_menu',
-      'deleteable',
+      'deletable',
+      'depth',
       'draft',
       'slug',
       'position',
