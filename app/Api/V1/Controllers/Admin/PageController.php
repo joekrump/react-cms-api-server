@@ -112,7 +112,7 @@ class PageController extends Controller
 
     $page_slug = $request->get('slug');
     
-    if($page_slug){
+    if($page_slug && ($page_slug != $page->slug)){
       $page->slug = PageHelper::makeSlug($page_slug);;
 
       // TODO: update the full_path for the page.
