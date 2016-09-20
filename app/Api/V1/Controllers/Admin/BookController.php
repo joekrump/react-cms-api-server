@@ -30,8 +30,6 @@ class BookController extends Controller
   {
       $currentUser = JWTAuth::parseToken()->authenticate();
 
-      $book = new Book;
-
       $credentials = $request->only(['title', 'author_name', 'pages_count']);
 
       $validator = Validator::make($credentials, [
@@ -43,6 +41,8 @@ class BookController extends Controller
       if($validator->fails()) {
           throw new ValidationHttpException($validator->errors());
       }
+
+      $book = new Book($credentials);
 
       if($currentUser->books()->save($book))
           return $this->response->item($book, new BookTransformer)->setStatusCode(200);
