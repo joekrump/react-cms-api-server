@@ -8,6 +8,8 @@ use JWTAuth;
 use App\Book;
 use Dingo\Api\Routing\Helpers;
 use App\Transformers\BookTransformer;
+use Validator;
+use Dingo\Api\Exception\ValidationHttpException;
 
 class BookController extends Controller
 {

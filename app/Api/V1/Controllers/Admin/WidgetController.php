@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Widget;
+use Validator;
+use Dingo\Api\Exception\ValidationHttpException;
 
 class WidgetController extends Controller
 {

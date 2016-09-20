@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Transformers\RoleTransformer;
 use Dingo\Api\Routing\Helpers;
 use Validator;
+use Dingo\Api\Exception\ValidationHttpException;
 
 /**
  * Role resource representation.

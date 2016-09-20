@@ -11,7 +11,8 @@ use Dingo\Api\Routing\Helpers;
 use App\Transformers\PageTransformer;
 use App\Transformers\PageListTransformer;
 use App\Helpers\PageHelper;
-
+use Validator;
+use Dingo\Api\Exception\ValidationHttpException;
 
 class PageController extends Controller
 {

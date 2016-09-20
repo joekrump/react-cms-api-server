@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Dingo\Api\Routing\Helpers;
 use Cache;
 use Validator;
+use Dingo\Api\Exception\ValidationHttpException;
 
 use App\Jobs\LogoutInactiveUser;
 use App\Transformers\UserTransformer;
