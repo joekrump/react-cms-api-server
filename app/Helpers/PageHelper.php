@@ -8,12 +8,12 @@ class PageHelper
 {
   public static function makeFullPath(Page $page)
   {
-    // TODO: get the depth of the page
-    // 
-    // if the depth is > 0 then get the parent page for this page
-    // get the full_path for the parent page
-    // append the slug of this page to the full_path of the parent page
-    // return the full value.
+    if(!empty($page->depth) && $page->depth > 0){
+      $parentPath = $page->parent()->get(['full_path']);
+      return "{$parentPath}/{$page->slug}";
+    } else {
+      return "/{$page->slug}";
+    }
   }
 
   public static function makeSlug($value_to_sluggify) {

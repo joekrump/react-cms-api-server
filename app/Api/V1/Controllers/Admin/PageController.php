@@ -56,9 +56,7 @@ class PageController extends Controller
       $page->slug = PageHelper::makeSlug($page->name);
     }
 
-    // TODO: Use method in PageHelper to make a proper unique full_path value
-    // 
-    $page->full_path = "/" . $page->slug;
+    $page->full_path = PageHelper::makeFullPath($page);
     
     if($page->save()){
 
@@ -116,6 +114,7 @@ class PageController extends Controller
       $page->slug = PageHelper::makeSlug($page_slug);;
 
       // TODO: update the full_path for the page.
+      $page->full_path = PageHelper::makeFullPath($page);
     }
    
     if(($template_id = $request->get('template_id'))){
