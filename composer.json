@@ -12,7 +12,7 @@
         "zizaco/entrust": "dev-laravel-5",
         "stripe/stripe-php": "^3.20",
         "barryvdh/laravel-cors": "^0.8.1",
-        "cviebrock/eloquent-sluggable": "4.0",
+        "cviebrock/eloquent-sluggable": "^4.1",
         "doctrine/dbal": "^2.5"
     },
     "require-dev": {
