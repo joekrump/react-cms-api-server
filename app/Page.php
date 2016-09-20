@@ -3,12 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
 
 class Page extends Model
 {
-  use Sluggable;
-
   protected $fillable = [
     'full_path',
     'in_menu',
@@ -19,20 +16,6 @@ class Page extends Model
     'position',
     'template_id'
   ];
-
-  /**
-   * Return the sluggable configuration array for this model.
-   *
-   * @return array
-   */
-  public function sluggable()
-  {
-      return [
-          'slug' => [
-              'source' => 'name'
-          ]
-      ];
-  }
 
   public function children() {
     return $this->hasMany('App\Page', 'parent_id', 'id');

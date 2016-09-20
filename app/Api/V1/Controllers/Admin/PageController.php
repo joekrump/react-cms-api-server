@@ -10,6 +10,8 @@ use App\PageTemplate;
 use Dingo\Api\Routing\Helpers;
 use App\Transformers\PageTransformer;
 use App\Transformers\PageListTransformer;
+use App\Helpers\PageHelper;
+
 
 class PageController extends Controller
 {
@@ -43,17 +45,21 @@ class PageController extends Controller
       $page->name = $page_name;
     }
 
+    // if if an explicit slug has been set.
+    // 
     $page_slug = $request->get('slug');
+    
     if($page_slug){
-      $page->slug = $page_slug;
+      // run makeSlug to ensure that the slug returned is unique for the Page model.
+      $page->slug = PageHelper::makeSlug($page_slug);
     } else {
-      // TODO: Make slug here.
-      // 
-      $page->slug = str_slug($page->name);
+      $page->slug = PageHelper::makeSlug($page->name);
     }
 
-    $page->full_path = "/" . $page->slug;
+    // TODO: Use method in PageHelper to make a proper unique full_path value
     // 
+    $page->full_path = "/" . $page->slug;
+    
     if($page->save()){
 
       // Assign content for the page.
@@ -95,8 +101,6 @@ class PageController extends Controller
 
   public function update(Request $request, $id)
   {
-
-
     $page = Page::find($id);
     if(!$page)
       throw new NotFoundHttpException;
@@ -107,19 +111,15 @@ class PageController extends Controller
     }
 
     $page_slug = $request->get('slug');
+    
     if($page_slug){
-      $page->slug = $page_slug;
+      $page->slug = PageHelper::makeSlug($page_slug);;
+
+      // TODO: update the full_path for the page.
     }
    
     if(($template_id = $request->get('template_id'))){
       $page->template_id = $template_id;
-    }
-
-    // TODO: make fullpath and slug in a better way...
-    if(($full_path = $request->get('full_path'))){
-      
-    } else if($page_slug) {
-      $page->full_path = '/' . $page->slug;
     }
 
     if($page->save()){
