@@ -28,33 +28,24 @@ class PageController extends Controller
 
   public function store(Request $request)
   { 
-    if(!PageTemplate::find($request->get('template_id'))) {
-      $template_id = 1;
-      // return $this->response->error('Could not find a template with id specified', 500);
-    } else {
-      $template_id = $request->get('template_id');
+    $credentials = $request->only(['name', 'in_menu', 'deletable', 'depth', 'draft', 'slug', 'position', 'template_id']);
+
+    $validator = Validator::make($credentials, [
+        'name' => 'required',
+        'template_id' => 'required|integer|min:1'
+    ]);
+
+    // run validation and return errors if there was an issue.
+    if($validator->fails()) {
+        throw new ValidationHttpException($validator->errors());
     }
+    // dd($credentials);
+    $page = new Page($credentials);
 
-    $page = new Page;
-
-    $page->name         = $request->get('name');
-    $page->template_id  = $template_id;
-    // TODO needs to check if it is already taken.
-    // 
-    $page_name = $request->get('name');
-    if($page_name){
-      $page->name = $page_name;
-    }
-
-    // if if an explicit slug has been set.
-    // 
-    $page_slug = $request->get('slug');
-    
-    if($page_slug){
-      // run makeSlug to ensure that the slug returned is unique for the Page model.
-      $page->slug = PageHelper::makeSlug($page_slug);
-    } else {
+    if(is_null($credentials['slug'])){
       $page->slug = PageHelper::makeSlug($page->name);
+    } else {
+      $page->slug = PageHelper::makeSlug($credentials['slug']);
     }
 
     $page->full_path = PageHelper::makeFullPath($page);
@@ -76,8 +67,7 @@ class PageController extends Controller
       } else if($page_content) {
         $page->parts()->save(new PagePart(['content' => $page_content]));
       } else {
-        // TODO: If there is no content entered for the page should return an error message of some sort. 
-        // 
+        // no content in the page. 
       }
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);

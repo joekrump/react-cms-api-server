@@ -10,8 +10,8 @@ class Page extends Model
   use Sluggable;
 
   protected $fillable = [
-    'full_path',
     'in_menu',
+    'name',
     'deletable',
     'depth',
     'draft',
