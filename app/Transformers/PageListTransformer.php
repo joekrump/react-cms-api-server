@@ -16,16 +16,17 @@ class PageListTransformer extends TransformerAbstract
   {
 
       return [
-        'id'              => $page->id,
-        'in_menu'         => $page->in_menu,
-        'position'        => $page->position,
-        'depth'           => $page->depth,
-        'deletable'       => $page->deletable,
-        'draft'           => $page->draft,
-        'template_id'     => $page->template_id,
-        'primary'         => $page->name,
-        'use_editor'      => true,
-        'secondary'       => $page->full_path
+        'id'          => $page->id,
+        'in_menu'     => $page->in_menu,
+        'position'    => $page->position,
+        'depth'       => $page->depth,
+        'deletable'   => $page->deletable,
+        'draft'       => $page->draft,
+        'template_id' => $page->template_id,
+        'primary'     => $page->name,
+        'use_editor'  => true,
+        'secondary'   => $page->full_path,
+        'parent'      => $page->parent 
       ];
   }
 }

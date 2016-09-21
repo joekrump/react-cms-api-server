@@ -20,7 +20,7 @@ class PageController extends Controller
 
   public function index()
   {
-    $pages = Page::orderBy('name', 'asc')->get();
+    $pages = Page::with('parent')->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
 
     return $this->response->collection($pages, new PageListTransformer);
   }
@@ -102,7 +102,7 @@ class PageController extends Controller
   }
 
   public function updatePosition(Request $request, $id) {
-    
+
   }
 
   public function update(Request $request, $id)
