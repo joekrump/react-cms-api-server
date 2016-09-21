@@ -64,18 +64,35 @@ class BookController extends Controller
 
   public function update(Request $request, $id)
   {
-      $currentUser = JWTAuth::parseToken()->authenticate();
+    $currentUser = JWTAuth::parseToken()->authenticate();
+    $book = $currentUser->books()->find($id);
+    
+    if(!$book) {
+      throw new NotFoundHttpException;
+    }
+    // If there were no values passed in the request then return early.
+    if(!$request->all()) {
+      return $this->response->error('Nothing to update', 400);
+    }
 
-      $book = $currentUser->books()->find($id);
-      if(!$book)
-          throw new NotFoundHttpException;
+    $credentials = $request->only(['title', 'author_name', 'pages_count']);
+    $book->fill($credentials);
 
-      $book->fill($request->all());
+    $validator = Validator::make($book->getAttributes(), [
+      'title' => 'required',
+      'author_name' => 'required',
+      'pages_count' => 'required|integer|min:1',
+    ]);
 
-      if($book->save())
-          return $this->response->item($book, new BookTransformer)->setStatusCode(200);
-      else
-          return $this->response->error('could_not_update_book', 500);
+    if($validator->fails()) {
+      throw new ValidationHttpException($validator->errors());
+    }
+
+    if($book->save()){
+      return $this->response->item($book, new BookTransformer)->setStatusCode(200);
+    } else {
+      return $this->response->error('Something went wrong. Could not update the book', 500);
+    }
   }
 
   public function destroy($id)
