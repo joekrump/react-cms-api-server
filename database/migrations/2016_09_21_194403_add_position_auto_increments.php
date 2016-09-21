@@ -12,7 +12,7 @@ class AddPositionAutoIncrements extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE pages MODIFY COLUMN position MEDIUMINT auto_increment');   
+        DB::statement('ALTER TABLE pages MODIFY COLUMN position MEDIUMINT AUTO_INCREMENT');   
     }
 
     /**
