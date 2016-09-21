@@ -28,7 +28,7 @@ class PageController extends Controller
 
   public function store(Request $request)
   { 
-    $credentials = $request->only(['name', 'in_menu', 'deletable', 'depth', 'draft', 'slug', 'position', 'template_id']);
+    $credentials = $request->only(['name', 'in_menu', 'draft', 'slug', 'template_id', 'parent_id']);
 
     $page = new Page($credentials);
 
@@ -38,13 +38,21 @@ class PageController extends Controller
       $page->slug = $credentials['slug'];
     }
 
+    if(is_null($credentials['in_menu'])){
+      $page->in_menu = false;
+    }
+
+    if(is_null($credentials['draft'])){
+      $page->draft = false;
+    }
+
     $page->full_path = PageHelper::makeFullPath($page);
     $validator = Validator::make($page->getAttributes(), [
         'name' => 'required',
         'template_id' => 'required|integer|min:1',
         'full_path' => 'unique:pages'
     ]);
-    
+
     if($validator->fails()) {
       if(empty($validator->errors()->get('full_path'))){
         throw new ValidationHttpException($validator->errors());

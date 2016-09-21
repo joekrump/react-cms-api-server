@@ -17,7 +17,8 @@ class Page extends Model
     'draft',
     'slug',
     'position',
-    'template_id'
+    'template_id',
+    'parent_id'
   ];
 
   /**
