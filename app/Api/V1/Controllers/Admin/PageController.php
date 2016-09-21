@@ -101,11 +101,16 @@ class PageController extends Controller
     return  $this->response->errorNotFound('Could Not Find details for Page with id=' . $id);
   }
 
+  public function updatePosition(Request $request, $id) {
+    
+  }
+
   public function update(Request $request, $id)
   {
     $page = Page::find($id);
-    if(!$page)
+    if(!$page){
       throw new NotFoundHttpException;
+    }
 
     $specialFields = $request->only(['slug', 'template_id', 'parent_id']);
     $basicFields = $request->only(['name', 'in_menu', 'draft']);
@@ -140,10 +145,9 @@ class PageController extends Controller
       // Assign content for the page.
       //
       if(!is_null($specialFields['parent_id']) && $specialFields['parent_id'] != $page->parent_id) {
-        // TODO: assign a parent page.
+        // Assign this page to its parent.
         $parent = Page::find($specialFields['parent_id']);
-        $parent->children()->save($page)
-
+        $parent->children()->save($page);
       }
 
       $page_content = $request->get('content');
