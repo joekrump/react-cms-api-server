@@ -85,7 +85,7 @@ class PageController extends Controller
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
     } else {
-      return $this->response->error('could_not_create_page', 500);
+      return $this->response->error('Error, could not create the page', 500);
     }
   }
 
@@ -107,27 +107,45 @@ class PageController extends Controller
     if(!$page)
       throw new NotFoundHttpException;
 
-    $page_name = $request->get('name');
-    if($page_name){
-      $page->name = $page_name;
-    }
-
-    $page_slug = $request->get('slug');
+    $specialFields = $request->only(['slug', 'template_id', 'parent_id']);
+    $basicFields = $request->only(['name', 'in_menu', 'draft']);
     
-    if($page_slug && ($page_slug != $page->slug)){
-      $page->slug = PageHelper::makeSlug($page_slug);;
-
-      // TODO: update the full_path for the page.
+    if(!is_null($specialFields['slug']) && ($specialFields['slug'] != $page->slug)){
+      $page->slug = $specialFields['slug'];
       $page->full_path = PageHelper::makeFullPath($page);
     }
-   
-    if(($template_id = $request->get('template_id'))){
-      $page->template_id = $template_id;
+
+    if(!is_null($specialFields['template_id'])){
+      $page->template_id = $specialFields['template_id'];
     }
+
+    $validator = Validator::make($page->getAttributes(), [
+      'template_id' => 'required|integer|min:1',
+      'full_path' => "unique:pages,full_path,{$page->id}"
+    ]);
+
+    if($validator->fails()) {
+      if(empty($validator->errors()->get('full_path'))){
+        throw new ValidationHttpException($validator->errors());
+      } else {
+        // If there is an error for full_path it must be because it isn't unique. Therefore create a new unique slug and build a new full_path.
+        $page->slug = PageHelper::makeSlug($page->slug);
+        $page->full_path = PageHelper::makeFullPath($page);
+      }
+    }
+
+    $page->fill($basicFields);
 
     if($page->save()){
       // Assign content for the page.
       //
+      if(!is_null($specialFields['parent_id']) && $specialFields['parent_id'] != $page->parent_id) {
+        // TODO: assign a parent page.
+        $parent = Page::find($specialFields['parent_id']);
+        $parent->children()->save($page)
+
+      }
+
       $page_content = $request->get('content');
 
       if($page_content){
