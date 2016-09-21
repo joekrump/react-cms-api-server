@@ -20,7 +20,7 @@ class PageController extends Controller
 
   public function index()
   {
-    $pages = Page::with('parent')->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
+    $pages = Page::with('children')->where('parent_id', null)->orderBy('depth', 'asc')->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
 
     return $this->response->collection($pages, new PageListTransformer);
   }
