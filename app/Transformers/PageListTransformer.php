@@ -8,7 +8,8 @@ use App\Page;
 class PageListTransformer extends TransformerAbstract
 {
   /**
-   * Turn this item object into a generic array
+   * Turn the page into an associative array with nested children
+   * if there are any.
    *
    * @return array
    */
@@ -16,8 +17,13 @@ class PageListTransformer extends TransformerAbstract
   {
     if($page->children->count() > 0) {
       $page_with_children = $this->getDefaultFields($page);
-
-      foreach ($page->children as $key => $value) {
+      
+      $childPages = $page->children()
+        ->orderBy('depth', 'asc')
+        ->orderBy('position', 'asc')
+        ->orderBy('name', 'asc')->get();
+      
+      foreach ($childPages as $key => $value) {
          $page_with_children['children'][] = $this->transform($value);
       }
       return $page_with_children;

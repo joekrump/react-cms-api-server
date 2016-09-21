@@ -20,7 +20,12 @@ class PageController extends Controller
 
   public function index()
   {
-    $pages = Page::with('children')->where('parent_id', null)->orderBy('depth', 'asc')->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
+    $pages = Page::with('children')
+      ->where('parent_id', null)
+      ->orderBy('depth', 'asc')
+      ->orderBy('position', 'asc')
+      ->orderBy('name', 'asc')
+      ->get();
 
     return $this->response->collection($pages, new PageListTransformer);
   }
@@ -28,7 +33,14 @@ class PageController extends Controller
 
   public function store(Request $request)
   { 
-    $credentials = $request->only(['name', 'in_menu', 'draft', 'slug', 'template_id', 'parent_id']);
+    $credentials = $request->only([
+      'name', 
+      'in_menu', 
+      'draft', 
+      'slug', 
+      'template_id', 
+      'parent_id']
+    );
 
     $page = new Page($credentials);
 
@@ -57,7 +69,8 @@ class PageController extends Controller
       if(empty($validator->errors()->get('full_path'))){
         throw new ValidationHttpException($validator->errors());
       } else {
-        // If there is an error for full_path it must be because it isn't unique. Therefore create a new unique slug and build a new full_path.
+        // If there is an error for full_path it must be because it isn't unique. 
+        // Therefore create a new unique slug and build a new full_path.
         $page->slug = PageHelper::makeSlug($page->slug);
         $page->full_path = PageHelper::makeFullPath($page);
       }
@@ -67,8 +80,8 @@ class PageController extends Controller
 
       // Assign content for the page.
       $page_content = $request->get('content');
-      // If the content is longer than 21000 characters then split it amongst multiple page parts to
-      // ensure content isn't trucated
+      // If the content is longer than 21000 characters then split it 
+      // amongst multiple page parts to ensure content isn't trucated
       // 
       if($page_content && (strlen($page_content) > 21000)) {
         $content_chunks = str_split($page_content, 21000);
@@ -133,7 +146,8 @@ class PageController extends Controller
       if(empty($validator->errors()->get('full_path'))){
         throw new ValidationHttpException($validator->errors());
       } else {
-        // If there is an error for full_path it must be because it isn't unique. Therefore create a new unique slug and build a new full_path.
+        // If there is an error for full_path it must be because it isn't unique. 
+        // Therefore create a new unique slug and build a new full_path.
         $page->slug = PageHelper::makeSlug($page->slug);
         $page->full_path = PageHelper::makeFullPath($page);
       }
@@ -153,8 +167,8 @@ class PageController extends Controller
       $page_content = $request->get('content');
 
       if($page_content){
-        // If the content is longer than 21000 characters then split it amongst multiple page parts to
-        // ensure content isn't trucated
+        // If the content is longer than 21000 characters then split it amongst 
+        // multiple page parts to ensure content isn't trucated
         // 
         if(strlen($page_content) > 21000) {
           $content_chunks = str_split($page_content, 21000);
@@ -179,7 +193,9 @@ class PageController extends Controller
           if($num_existing_parts > $num_chunks) {
             $part_ids_to_remove = [];
 
-            return $this->response->array(['num_to_delete' => $num_existing_parts - $num_chunks])->setStatusCode(200);
+            return $this->response
+              ->array(['num_to_delete' => $num_existing_parts - $num_chunks])
+              ->setStatusCode(200);
 
             for($j = $i; $j < $num_existing_parts; $j++){
               $part_ids_to_remove[] = $num_existing_parts[$j]->id;
@@ -199,7 +215,9 @@ class PageController extends Controller
             $first_page_part->content = $page_content;
             $first_page_part->save();
             if($num_parts > 1) {
-              $other_part_ids = $page->parts()->whereNotIn('id', [$first_page_part->id])->lists('page_parts.id');
+              $other_part_ids = $page->parts()
+                ->whereNotIn('id', [$first_page_part->id])
+                ->lists('page_parts.id');
               PagePart::whereIn('id',$other_part_ids)->delete();
             }
           } else {
@@ -227,11 +245,12 @@ class PageController extends Controller
       if($page->delete())
         return $this->response->noContent()->setStatusCode(200);
       else
-        return $this->response->errorBadRequest('Could Note Remove the Page with id=' . $id);
+        return $this->response->errorBadRequest("Could Note Remove the Page with id={$id}");
     }
     if(!$page->deleteable) {
-      return $this->response->errorBadRequest('Could Note Remove the Page with id=' . $id . ' It is not allowed to be deleted.');
+      return $this->response->errorBadRequest("Could Note Remove the Page with id={$id}"
+        . " It is not allowed to be deleted.");
     }
-    return $this->response->errorNotFound('Could not Find Page to remove with an id=' . $id);
+    return $this->response->errorNotFound("Could not Find Page to remove with an id={$id}");
   }
 }
