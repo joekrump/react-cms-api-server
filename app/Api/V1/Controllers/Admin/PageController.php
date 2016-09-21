@@ -44,12 +44,12 @@ class PageController extends Controller
         'template_id' => 'required|integer|min:1',
         'full_path' => 'unique:pages'
     ]);
-
-    // run validation and return errors if there was an issue.
+    
     if($validator->fails()) {
       if(empty($validator->errors()->get('full_path'))){
         throw new ValidationHttpException($validator->errors());
       } else {
+        // If there is an error for full_path it must be because it isn't unique. Therefore create a new unique slug and build a new full_path.
         $page->slug = PageHelper::makeSlug($page->slug);
         $page->full_path = PageHelper::makeFullPath($page);
       }
