@@ -12,9 +12,7 @@ class AddPositionAutoIncrements extends Migration
      */
     public function up()
     {
-        Schema::table('pages', function (Blueprint $table) {
-            //
-        });
+        DB::statement('ALTER TABLE pages MODIFY COLUMN position MEDIUMINT auto_increment');   
     }
 
     /**
@@ -24,8 +22,6 @@ class AddPositionAutoIncrements extends Migration
      */
     public function down()
     {
-        Schema::table('pages', function (Blueprint $table) {
-            //
-        });
+        DB::statement('ALTER TABLE pages MODIFY COLUMN position MEDIUMINT');
     }
 }
