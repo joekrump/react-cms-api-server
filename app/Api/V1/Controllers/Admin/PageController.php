@@ -30,25 +30,30 @@ class PageController extends Controller
   { 
     $credentials = $request->only(['name', 'in_menu', 'deletable', 'depth', 'draft', 'slug', 'position', 'template_id']);
 
-    $validator = Validator::make($credentials, [
+    $page = new Page($credentials);
+
+    if(is_null($credentials['slug'])){
+      $page->slug = str_slug($page->name);
+    } else {
+      $page->slug = $credentials['slug'];
+    }
+
+    $page->full_path = PageHelper::makeFullPath($page);
+    $validator = Validator::make($page->getAttributes(), [
         'name' => 'required',
-        'template_id' => 'required|integer|min:1'
+        'template_id' => 'required|integer|min:1',
+        'full_path' => 'unique:pages'
     ]);
 
     // run validation and return errors if there was an issue.
     if($validator->fails()) {
+      if(empty($validator->errors()->get('full_path'))){
         throw new ValidationHttpException($validator->errors());
+      } else {
+        $page->slug = PageHelper::makeSlug($page->slug);
+        $page->full_path = PageHelper::makeFullPath($page);
+      }
     }
-    // dd($credentials);
-    $page = new Page($credentials);
-
-    if(is_null($credentials['slug'])){
-      $page->slug = PageHelper::makeSlug($page->name);
-    } else {
-      $page->slug = PageHelper::makeSlug($credentials['slug']);
-    }
-
-    $page->full_path = PageHelper::makeFullPath($page);
     
     if($page->save()){
 
