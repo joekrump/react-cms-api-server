@@ -239,7 +239,7 @@ class PageController extends Controller
 
     $page = Page::find($id);
 
-    if($page && $page->deleteable) {
+    if($page && $page->deletable) {
 
       $page->parts()->delete();
       if($page->delete())
@@ -247,7 +247,7 @@ class PageController extends Controller
       else
         return $this->response->errorBadRequest("Could Note Remove the Page with id={$id}");
     }
-    if(!$page->deleteable) {
+    if(!$page->deletable) {
       return $this->response->errorBadRequest("Could Note Remove the Page with id={$id}"
         . " It is not allowed to be deleted.");
     }
