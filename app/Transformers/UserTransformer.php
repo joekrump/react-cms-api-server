@@ -20,7 +20,8 @@ class UserTransformer extends TransformerAbstract
             'name'      => $user->name,
             'email'     => $user->email,
             'primary'   => $user->name,
-            'secondary' => $user->email
+            'secondary' => $user->email,
+            'leaf'      => true
         ];
     }
 

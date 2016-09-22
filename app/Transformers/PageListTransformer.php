@@ -43,7 +43,8 @@ class PageListTransformer extends TransformerAbstract
       'template_id' => $page->template_id,
       'primary'     => $page->name,
       'use_editor'  => true,
-      'secondary'   => $page->full_path
+      'secondary'   => $page->full_path,
+      'children'    => []
     ];
   }
 }

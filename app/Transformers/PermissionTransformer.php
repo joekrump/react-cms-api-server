@@ -21,7 +21,8 @@ class PermissionTransformer extends TransformerAbstract
             'display_name' => $permission->display_name,
             'description'  => $permission->description,
             'primary'      => $permission->display_name,
-            'secondary'    => $permission->description
+            'secondary'    => $permission->description,
+            'leaf'         => true
         ];
     }
 

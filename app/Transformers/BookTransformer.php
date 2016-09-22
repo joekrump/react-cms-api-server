@@ -21,7 +21,8 @@ class BookTransformer extends TransformerAbstract
             'author_name' => $book->author_name,
             'pages_count' => $book->pages_count,
             'primary'     => $book->title,
-            'secondary'   => $book->author_name
+            'secondary'   => $book->author_name,
+            'leaf'        => true
         ];
     }
 

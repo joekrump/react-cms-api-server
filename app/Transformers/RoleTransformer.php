@@ -21,7 +21,8 @@ class RoleTransformer extends TransformerAbstract
             'display_name' => $role->display_name,
             'description'  => $role->description,
             'primary'      => $role->display_name,
-            'secondary'    => $role->description
+            'secondary'    => $role->description,
+            'leaf'         => true
         ];
     }
 
