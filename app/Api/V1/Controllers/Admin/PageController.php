@@ -114,7 +114,7 @@ class PageController extends Controller
     return  $this->response->errorNotFound('Could Not Find details for Page with id=' . $id);
   }
 
-  public function updatePosition(Request $request, $id) {
+  public function updateIndex(Request $request) {
 
   }
 

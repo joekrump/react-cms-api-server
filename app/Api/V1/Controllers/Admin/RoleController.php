@@ -54,6 +54,10 @@ class RoleController extends Controller
     return $this->response->collection($roles, new RoleTransformer);
   }
 
+  public function updateIndex(Request $request) {
+
+  }
+
   /**
    * Store a newly created resource in storage.
    *

@@ -37,19 +37,24 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->post('assign-role', 'App\Api\V1\Controllers\Admin\UserController@assignRole');
 		$api->post('attach-permission', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
 		$api->post('users', 'App\Api\V1\Controllers\Admin\UserController@store');
-
+		$api->put('update-index', 'App\Api\V1\Controllers\Admin\UserController@updateIndex');
+		
 		$api->resource('roles', 'App\Api\V1\Controllers\Admin\RoleController');
+		$api->put('update-index', 'App\Api\V1\Controllers\Admin\RoleController@updateIndex');
 		$api->resource('permissions', 'App\Api\V1\Controllers\Admin\PermissionController');
+		$api->put('update-index', 'App\Api\V1\Controllers\Admin\RoleController@updateIndex');
 	});
 
 	// Book resource routes
 	// 
 	$api->group(['middleware' => ['ability:admin,books']], function($api){
 		$api->resource('books', 'App\Api\V1\Controllers\Admin\BookController');
+		$api->put('update-index', 'App\Api\V1\Controllers\Admin\BookController@updateIndex');
 	});
 
 	$api->group(['middleware' => ['ability:admin,pages']], function($api){
 		$api->resource('pages', 'App\Api\V1\Controllers\Admin\PageController');
+		$api->put('update-index', 'App\Api\V1\Controllers\Admin\PageController@updateIndex');
 		$api->get('page-templates', 'App\Api\V1\Controllers\Admin\PageTemplateController@index');
 	});
 

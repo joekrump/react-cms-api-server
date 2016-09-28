@@ -98,6 +98,10 @@ class UserController extends Controller
     return $this->response->collection($users, new UserTransformer);
   }
 
+  public function updateIndex(Request $request) {
+
+  }
+
   /**
    * Method for handling a request to create and save a new User.
    * @param  Request $request - contains data for creating a new user

@@ -31,6 +31,11 @@ class PermissionController extends Controller
     return $this->response->collection($permissions, new PermissionTransformer);
   }
 
+  public function updateIndex(Request $request) {
+
+  }
+  
+
   /**
    * Store a newly created resource in storage.
    *

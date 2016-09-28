@@ -25,6 +25,10 @@ class BookController extends Controller
       return $this->response->collection($books, new BookTransformer);
   }
 
+  public function updateIndex(Request $request) {
+
+  }
+
 
   public function store(Request $request)
   {

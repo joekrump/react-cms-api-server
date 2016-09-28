@@ -26,4 +26,8 @@ class PageTemplateController extends Controller
       return $this->response->error('could_note_get_templates', 500);
     }
   }
+
+  public function updateIndex(Request $request) {
+
+  }
 }
