@@ -9,7 +9,6 @@ use Dingo\Api\Routing\Helpers;
 use App\Permission;
 use App\Transformers\PermissionTransformer;
 use Validator;
-use Validator;
 use Dingo\Api\Exception\ValidationHttpException;
 
 /**
@@ -34,7 +33,7 @@ class PermissionController extends Controller
   public function updateIndex(Request $request) {
 
   }
-  
+
 
   /**
    * Store a newly created resource in storage.

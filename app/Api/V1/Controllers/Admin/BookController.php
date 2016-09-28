@@ -26,7 +26,7 @@ class BookController extends Controller
   }
 
   public function updateIndex(Request $request) {
-
+    
   }
 
 

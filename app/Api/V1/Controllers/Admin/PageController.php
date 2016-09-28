@@ -115,7 +115,10 @@ class PageController extends Controller
   }
 
   public function updateIndex(Request $request) {
-
+    $tree = $request->get('nodeArray');
+    if($tree) {
+      dd($tree);
+    }
   }
 
   public function update(Request $request, $id)
