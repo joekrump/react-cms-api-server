@@ -40,7 +40,9 @@ class PageListTransformer extends TransformerAbstract
       'draft'       => $page->draft,
       'primary'     => $page->name,
       'secondary'   => $page->full_path,
-      'children'    => []
+      'children'    => [],
+      'unmovable'   => ($page->full_path == '/home'),
+      'denyNested'  => ($page->full_path == '/home')
     ];
   }
 }

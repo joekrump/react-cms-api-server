@@ -22,7 +22,9 @@ class PermissionTransformer extends TransformerAbstract
             'description'  => $permission->description,
             'primary'      => $permission->display_name,
             'secondary'    => $permission->description,
-            'deletable'    => true
+            'deletable'    => true,
+            // 'unmovable'    => false,
+            // 'denyNested'   => false
         ];
     }
 

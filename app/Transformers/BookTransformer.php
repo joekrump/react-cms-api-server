@@ -22,7 +22,9 @@ class BookTransformer extends TransformerAbstract
             'pages_count' => $book->pages_count,
             'primary'     => $book->title,
             'secondary'   => $book->author_name,
-            'deletable'   => true
+            'deletable'   => true,
+            // 'unmovable'    => false,
+            // 'denyNested'   => false
         ];
     }
 

@@ -18,7 +18,6 @@ class PageTemplateTransformer extends TransformerAbstract
     return [
       'id'           => $page_template->id,
       'display_name' => $page_template->display_name,
-      'leaf'         => true
     ];
   }
 }
