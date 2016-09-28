@@ -13,7 +13,7 @@ class AddPositionToPermissions extends Migration
     public function up()
     {
         Schema::table('permissions', function (Blueprint $table) {
-            //
+            $table->integer('position');
         });
     }
 
@@ -25,7 +25,7 @@ class AddPositionToPermissions extends Migration
     public function down()
     {
         Schema::table('permissions', function (Blueprint $table) {
-            //
+            $table->dropColumn('position');
         });
     }
 }

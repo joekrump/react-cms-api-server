@@ -13,7 +13,7 @@ class AddPositionToBooks extends Migration
     public function up()
     {
         Schema::table('books', function (Blueprint $table) {
-            //
+            $table->integer('position');
         });
     }
 
@@ -25,7 +25,7 @@ class AddPositionToBooks extends Migration
     public function down()
     {
         Schema::table('books', function (Blueprint $table) {
-            //
+            $table->dropColumn('position');
         });
     }
 }
