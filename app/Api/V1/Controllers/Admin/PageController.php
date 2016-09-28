@@ -115,9 +115,24 @@ class PageController extends Controller
   }
 
   public function updateIndex(Request $request) {
-    $tree = $request->get('nodeArray');
-    if($tree) {
-      dd($tree);
+    $nodesArray = $request->get('nodeArray');
+    $node;
+    if($nodesArray) {
+      $numNodes = count($nodesArray);
+      // Note: first entry is being skipped
+      for($i = 1; $i < $numNodes; $i++) {
+        $node = $nodesArray[$i];
+        // dd($node);
+        if($node['parentIndex'] == 0) {
+          $parentId = null;
+        } else {
+          $parentId = $nodesArray[$node['parentIndex']]['model_id'];
+        }
+        Page::where('id', $node['model_id'])->update(['parent_id' => $parentId, 'position' => ($i + 1)]);
+      }
+      return $this->response->noContent()->setStatusCode(200);
+    } else {
+      return $this->response->error('Update Failed, no data received.', 401);
     }
   }
 

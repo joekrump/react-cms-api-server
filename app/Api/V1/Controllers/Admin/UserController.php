@@ -99,7 +99,19 @@ class UserController extends Controller
   }
 
   public function updateIndex(Request $request) {
-
+    $nodesArray = $request->get('nodeArray');
+    $node;
+    if($nodesArray) {
+      $numNodes = count($nodesArray);
+      // Note: first entry is being skipped
+      for($i = 1; $i < $numNodes; $i++) {
+        $node = $nodesArray[$i];
+        User::where('id', $node['model_id'])->update(['position' => $i]);
+      }
+      return $this->response->noContent()->setStatusCode(200);
+    } else {
+      return $this->response->error('Update Failed, no data received.', 401);
+    }
   }
 
   /**
