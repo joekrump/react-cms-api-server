@@ -50,12 +50,24 @@ class RoleController extends Controller
    */
   public function index()
   {
-    $roles = Role::all();
+    $roles = Role::orderBy('position')->get();
     return $this->response->collection($roles, new RoleTransformer);
   }
 
   public function updateIndex(Request $request) {
-
+    $nodesArray = $request->get('nodeArray');
+    $node;
+    if($nodesArray) {
+      $numNodes = count($nodesArray);
+      // Note: first entry is being skipped
+      for($i = 1; $i < $numNodes; $i++) {
+        $node = $nodesArray[$i];
+        Role::where('id', $node['model_id'])->update(['position' => $i]);
+      }
+      return $this->response->noContent()->setStatusCode(200);
+    } else {
+      return $this->response->error('Update Failed, no data received.', 401);
+    }
   }
 
   /**
