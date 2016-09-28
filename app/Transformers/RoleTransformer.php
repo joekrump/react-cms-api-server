@@ -22,7 +22,7 @@ class RoleTransformer extends TransformerAbstract
             'description'  => $role->description,
             'primary'      => $role->display_name,
             'secondary'    => $role->description,
-            'leaf'         => true
+            'deletable'    => true
         ];
     }
 

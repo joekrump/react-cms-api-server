@@ -21,7 +21,7 @@ class UserTransformer extends TransformerAbstract
             'email'     => $user->email,
             'primary'   => $user->name,
             'secondary' => $user->email,
-            'leaf'      => true
+            'deletable' => true
         ];
     }
 
