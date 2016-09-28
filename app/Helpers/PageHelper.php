@@ -6,10 +6,10 @@ use \Cviebrock\EloquentSluggable\Services\SlugService;
 
 class PageHelper
 {
-  public static function makeFullPath(Page $page)
+  public static function makeFullPath(Page $page, $parentId)
   {
-    if(!empty($page->depth) && $page->depth > 0){
-      $parentPath = $page->parent()->get(['full_path']);
+    if(isset($parentId)){
+      $parentPath = Page::findOrFail($parentId)->full_path;
       return "{$parentPath}/{$page->slug}";
     } else {
       return "/{$page->slug}";

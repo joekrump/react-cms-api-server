@@ -126,9 +126,13 @@ class PageController extends Controller
         if($node['parentIndex'] == 0) {
           $parentId = null;
         } else {
-          $parentId = $nodesArray[$node['parentIndex']]['model_id'];
+          $parentId = $nodesArray[$node['parentIndex']]['item_id'];
         }
-        Page::where('id', $node['model_id'])->update(['parent_id' => $parentId, 'position' => ($i + 1)]);
+        $page = Page::findOrFail($node['item_id']);
+        $page->full_path = PageHelper::makeFullPath($page, $parentId);
+        $page->parent_id = $parentId;
+        $page->position = ($i + 1);
+        $page->save();
       }
       return $this->response->noContent()->setStatusCode(200);
     } else {

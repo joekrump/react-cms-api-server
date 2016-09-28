@@ -38,7 +38,7 @@ class PermissionController extends Controller
       // Note: first entry is being skipped
       for($i = 1; $i < $numNodes; $i++) {
         $node = $nodesArray[$i];
-        Permission::where('id', $node['model_id'])->update(['position' => $i]);
+        Permission::where('id', $node['item_id'])->update(['position' => $i]);
       }
       return $this->response->noContent()->setStatusCode(200);
     } else {

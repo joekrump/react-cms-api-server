@@ -62,7 +62,7 @@ class RoleController extends Controller
       // Note: first entry is being skipped
       for($i = 1; $i < $numNodes; $i++) {
         $node = $nodesArray[$i];
-        Role::where('id', $node['model_id'])->update(['position' => $i]);
+        Role::where('id', $node['item_id'])->update(['position' => $i]);
       }
       return $this->response->noContent()->setStatusCode(200);
     } else {
