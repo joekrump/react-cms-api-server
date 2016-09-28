@@ -94,7 +94,7 @@ class UserController extends Controller
   public function index()
   { 
     // TODO: PAGINATE THIS
-    $users = User::all();
+    $users = User::orderBy('position')->get();
     return $this->response->collection($users, new UserTransformer);
   }
 
