@@ -6,34 +6,38 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Dingo\Api\Routing\Helpers;
 use App\Helpers\UnitConversionHelper;
+use Validator;
+use Dingo\Api\Exception\ValidationHttpException;
 
 class PaymentController extends Controller
 {
-
   public function __construct(){
     \Stripe\Stripe::setApiKey(\Config::get('stripe.test.sk'));
   }
   
   public function process_payment(Request $request){
 
-    $amt = $request->get('amt');
+    $validator = Validator::make($request->only(['fname', 'lname', 'email', 'amt']), [
+      'email' => 'required|email',
+      'fname' => 'required|min:2',
+      'lname' => 'required|min:2',
+      'amt'   => 'required|numeric|min:5'
+    ]);
 
-    if(!is_numeric($amt)){
-      return response()->json(['error' => ['message' => 'Sorry, the amount entered appears to not be a number. Please enter a new amount.']])->status(400);
-    } else if($amt < 1) {
-      return response()->json(['error' => ['message' => 'Sorry, the amount you entered does not meet the miniumum of $1.00. Please enter a new amount.']])->status(400);
+
+    if ($validator->fails()) {
+      throw new \Dingo\Api\Exception\StoreResourceFailedException('Could not process payment.', $validator->errors());
     }
 
     try {
       // DEBUGGING TIP: NOTE THAT IF AN INVALID PARAM IS PASSED TO THE CHARGE METHOD (ie. an invalid token or param name) THIS METHOD WILL SIMPLY RETURN 200 and the charge request is silently ignored. 
       // 
-      $email = $request->get('email');
       $token = $request->get('token');
       
       // TODO: Feature: Could do something with the values returned in cahrge if desired...
       //       perhaps store stripe customer id with user.
       $charge = \Stripe\Charge::create([
-        'receipt_email' => $email,
+        'receipt_email' => $request->get('email'),
         'source' => $token,
         'amount' => UnitConversionHelper::dollarsToCents($amt), 
         'currency' => 'cad',
