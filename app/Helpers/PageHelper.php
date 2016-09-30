@@ -8,7 +8,7 @@ class PageHelper
 {
   public static function makeFullPath(Page $page, $parentId)
   {
-    if(isset($parentId)){
+    if(isset($parentId) && !is_null($parentId)){
       $parentPath = Page::findOrFail($parentId)->full_path;
       return "{$parentPath}/{$page->slug}";
     } else {

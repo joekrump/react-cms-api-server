@@ -44,6 +44,7 @@ class PageController extends Controller
 
     $page = new Page($credentials);
 
+    // set some defaults
     if(is_null($credentials['slug'])){
       $page->slug = str_slug($page->name);
     } else {
@@ -58,7 +59,8 @@ class PageController extends Controller
       $page->draft = false;
     }
 
-    $page->full_path = PageHelper::makeFullPath($page);
+    $page->full_path = PageHelper::makeFullPath($page, null);
+
     $validator = Validator::make($page->getAttributes(), [
         'name' => 'required',
         'template_id' => 'required|integer|min:1',
@@ -174,8 +176,13 @@ class PageController extends Controller
         $page->full_path = PageHelper::makeFullPath($page);
       }
     }
-
-    $page->fill($basicFields);
+    // Make sure were are not trying to save empty or null values which might overwrite existing
+    // values.
+    foreach ($basicFields as $attr_name => $value) {
+      if(!is_null($value) && strlen($value)){
+        $page[$attr_name] = $value;
+      }
+    }
 
     if($page->save()){
       // Assign content for the page.

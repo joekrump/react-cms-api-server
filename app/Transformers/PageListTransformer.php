@@ -36,6 +36,7 @@ class PageListTransformer extends TransformerAbstract
     return [
       'id'          => $page->id,
       'deletable'   => $page->deletable,
+      'previewPath' => $page->full_path,
       'depth'       => $page->depth,
       'draft'       => $page->draft,
       'primary'     => $page->name,
