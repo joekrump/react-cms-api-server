@@ -269,19 +269,28 @@ class PageController extends Controller
     $page = Page::find($id);
 
     if($page && $page->deletable) {
-      if($page->children()->count() > 0) {
-        foreach($page->children as $child) {
-          $child->parent_id = $page->parent_id;
-          $child->full_path = PageHelper::makeFullPath($child, $page->parent_id);
-          $child->save();
-        }
+
+      $children = $page->children;
+      $parent_id = $page->parent_id;
+
+      foreach($children as $child) {
+        $child->parent_id = $parent_id;
+        $child->save();
       }
 
       $page->parts()->delete();
-      if($page->delete())
+
+      if($page->delete()) {
+        if(count($children) > 0 ){
+          foreach($children as $child) {
+            $child->full_path = PageHelper::makeFullPath($child, $parent_id);
+            $child->save();
+          }
+        }
         return $this->response->noContent()->setStatusCode(200);
-      else
+      } else {
         return $this->response->errorBadRequest("Could Note Remove the Page with id={$id}");
+      }
     }
     if(!$page->deletable) {
       return $this->response->errorBadRequest("Could Note Remove the Page with id={$id}"
