@@ -173,7 +173,7 @@ class PageController extends Controller
         // If there is an error for full_path it must be because it isn't unique. 
         // Therefore create a new unique slug and build a new full_path.
         $page->slug = PageHelper::makeSlug($page->slug);
-        $page->full_path = PageHelper::makeFullPath($page);
+        $page->full_path = PageHelper::makeFullPath($page, $page->parent_id);
       }
     }
     // Make sure were are not trying to save empty or null values which might overwrite existing
@@ -269,6 +269,13 @@ class PageController extends Controller
     $page = Page::find($id);
 
     if($page && $page->deletable) {
+      if($page->children()->count() > 0) {
+        foreach($page->children as $child) {
+          $child->parent_id = $page->parent_id;
+          $child->full_path = PageHelper::makeFullPath($child, $page->parent_id);
+          $child->save();
+        }
+      }
 
       $page->parts()->delete();
       if($page->delete())
