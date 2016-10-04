@@ -17,7 +17,7 @@ class CardController extends Controller
 
   public function index()
   {
-    $cards = Card::all();
+    $cards = Card::orderBy('position')->get();
 
     return $this->response->collection($cards, new CardTransformer);
   }
