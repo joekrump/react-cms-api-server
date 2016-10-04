@@ -19,8 +19,9 @@ class CardTransformer extends TransformerAbstract
     'id'            => $card->id,
     'front_content' => $card->front_content,
     'back_content'  => $card->back_content,
-    'primary'       => substr($card->front_content, 0, $substrLength),
-    'secondary'     => substr($card->back_content, 0, $substrLength)
+    'template_id'   => $card->template_id,
+    'primary'       => substr(strip_tags($card->front_content), 0, $substrLength),
+    'secondary'     => substr(strip_tags($card->back_content), 0, $substrLength)
     ];
   }
 

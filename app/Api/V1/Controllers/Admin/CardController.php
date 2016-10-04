@@ -85,15 +85,23 @@ class CardController extends Controller
     $credentials = $request->only(['front_content', 'back_content', 'template_id']);
 
     $validator = Validator::make($credentials, [
-      'front_content' => 'required|max:1000',
-      'back_content'  => 'required|max:1000'
+      'front_content' => 'max:1000',
+      'back_content'  => 'max:1000'
     ]);
 
     if($validator->fails()) {
       throw new ValidationHttpException($validator->errors());
     }
 
-    $card->fill($credentials);
+    if($credentials['front_content']){
+      $card->front_content = $credentials['front_content'];
+    }
+    if($credentials['back_content']){
+      $card->back_content = $credentials['back_content'];
+    }
+    if($credentials['template_id']){
+      $card->template_id = $credentials['template_id'];
+    }
 
     if($card->save()){
       return $this->response->item($card, new CardTransformer)->setStatusCode(200);
