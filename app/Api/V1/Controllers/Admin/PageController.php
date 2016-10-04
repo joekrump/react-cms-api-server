@@ -154,7 +154,7 @@ class PageController extends Controller
     
     if(!is_null($specialFields['slug']) && ($specialFields['slug'] != $page->slug)){
       $page->slug = $specialFields['slug'];
-      $page->full_path = PageHelper::makeFullPath($page);
+      $page->full_path = PageHelper::makeFullPath($page, $page->parent_id);
     }
 
     if(!is_null($specialFields['template_id'])){
