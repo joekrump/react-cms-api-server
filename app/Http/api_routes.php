@@ -51,11 +51,20 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->put('books/update-index', 'App\Api\V1\Controllers\Admin\BookController@updateIndex');
 		$api->resource('books', 'App\Api\V1\Controllers\Admin\BookController');
 	});
-
+	
+	// Page resoure routes
+	// 
 	$api->group(['middleware' => ['ability:admin,pages']], function($api){
 		$api->put('pages/update-index', 'App\Api\V1\Controllers\Admin\PageController@updateIndex');
 		$api->resource('pages', 'App\Api\V1\Controllers\Admin\PageController');
 		$api->get('page-templates', 'App\Api\V1\Controllers\Admin\PageTemplateController@index');
+	});
+
+	// Card resource routes
+	$api->group(['middleware' => ['ability:admin,cards']], function($api){
+		$api->put('cards/update-index', 'App\Api\V1\Controllers\Admin\CardController@updateIndex');
+		$api->resource('cards', 'App\Api\V1\Controllers\Admin\CardController');
+		// $api->get('card-templates', 'App\Api\V1\Controllers\Admin\CardTemplateController@index');
 	});
 
 	// Special routes having to do with Users.
