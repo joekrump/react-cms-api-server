@@ -16,6 +16,7 @@ class CreateCardsTable extends Migration
             $table->increments('id');
             $table->text('front_content');
             $table->text('back_content');
+            $table->integer('position')->default(0);
             $table->integer('template_id')->unsigned()->nullable();
             $table->timestamps();
         });
