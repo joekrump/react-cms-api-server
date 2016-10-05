@@ -70,6 +70,9 @@ class PageController extends Controller
     if($pagePath[0] != '/') {
       $pagePath = '/' . $pagePath;
     }
+    if($pagePath == '/') {
+      $pagePath = '/home';
+    }
     try {
       $page = Page::where('full_path', $pagePath)->firstOrFail();
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
