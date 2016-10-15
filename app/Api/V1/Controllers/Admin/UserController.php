@@ -79,7 +79,7 @@ class UserController extends Controller
       } 
     }
 
-    return $this->response->collection($activeUsers, new UserWidgetTransformer);
+    return $this->response->collection(collect($activeUsers), new UserWidgetTransformer);
   }
 
   /** CRUD METHODS **/
