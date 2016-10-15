@@ -22,19 +22,19 @@ class TokenEntrustAbility extends BaseMiddleware
     try {
       $user = $this->auth->authenticate($token);
     } catch (TokenExpiredException $e) {
-      return $this->response->error('Token Expired', $e->getStatusCode());
+      return $this->respond('tymon.jwt.invalid', 'Token Expired', $e->getStatusCode());
     } catch (JWTException $e) {
-      return $this->response->error('Token Invalid', $e->getStatusCode());
+      return $this->respond('tymon.jwt.invalid', 'Token Invalid', $e->getStatusCode());
     } catch (Exception $e) {
-      return $this->response->error('Something funny happened', 500);
+      return $this->respond('tymon.jwt.invalid', 'Something funny happened', 500);
     }
 
     if (! $user) {
-      return $this->response->error('User Not Found', 404);
+      return $this->respond('tymon.jwt.invalid', 'User Not Found', 404);
     }
 
     if (!$request->user()->ability(explode('|', $roles), explode('|', $permissions), array('validate_all' => $validateAll))) {
-      return $this->response->error('Invalid Token Permissions', 401);
+      return $this->respond('tymon.jwt.invalid', 'Invalid Token Permissions', 401);
     }
 
     $this->events->fire('tymon.jwt.valid', $user);

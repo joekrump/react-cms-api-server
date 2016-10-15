@@ -18,6 +18,7 @@ use Dingo\Api\Exception\ValidationHttpException;
 
 use App\Jobs\LogoutInactiveUser;
 use App\Transformers\UserTransformer;
+use App\Transformers\UserWidgetTransformer;
 
 /**
  * User resource representation.
@@ -78,7 +79,7 @@ class UserController extends Controller
       } 
     }
 
-    return compact('activeUsers');
+    return $this->response->collection($activeUsers, new UserWidgetTransformer);
   }
 
   /** CRUD METHODS **/
