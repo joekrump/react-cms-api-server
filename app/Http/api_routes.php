@@ -35,13 +35,24 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->get('users', 'App\Api\V1\Controllers\Admin\UserController@index');
 		$api->get('users/active', 'App\Api\V1\Controllers\Admin\UserController@activeUsers');
 		$api->put('users/update-index', 'App\Api\V1\Controllers\Admin\UserController@updateIndex');
-		$api->post('assign-role', 'App\Api\V1\Controllers\Admin\UserController@assignRole');
-		$api->post('attach-permission', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
 		$api->post('users', 'App\Api\V1\Controllers\Admin\UserController@store');
 
-		$api->put('permissions/update-index', 'App\Api\V1\Controllers\Admin\PermissionController@updateIndex');
+		$api->group(['middleware' => ['ability:admin,permissions']], function($api) {
+			$api->post('attach-permission', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
+		});
+
+		$api->group(['middleware' => ['ability:admin,roles']], function($api) {
+			$api->post('assign-role', 'App\Api\V1\Controllers\Admin\UserController@assignRole');
+		});
+	});
+
+	$api->group(['middleware' => ['ability:admin,roles']], function($api){
 		$api->put('roles/update-index', 'App\Api\V1\Controllers\Admin\RoleController@updateIndex');
 		$api->resource('roles', 'App\Api\V1\Controllers\Admin\RoleController');
+	});
+
+	$api->group(['middleware' => ['ability:admin,permissions']], function($api){
+		$api->put('permissions/update-index', 'App\Api\V1\Controllers\Admin\PermissionController@updateIndex');
 		$api->resource('permissions', 'App\Api\V1\Controllers\Admin\PermissionController');
 	});
 

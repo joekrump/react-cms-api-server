@@ -22,7 +22,7 @@ class TokenEntrustAbility extends BaseMiddleware
     try {
       $user = $this->auth->authenticate($token);
     } catch (TokenExpiredException $e) {
-      return $this->respond('tymon.jwt.invalid', 'Token Expired', $e->getStatusCode());
+      return $this->respond('tymon.jwt.expired', 'Token Expired', $e->getStatusCode());
     } catch (JWTException $e) {
       return $this->respond('tymon.jwt.invalid', 'Token Invalid', $e->getStatusCode());
     } catch (Exception $e) {
@@ -30,7 +30,7 @@ class TokenEntrustAbility extends BaseMiddleware
     }
 
     if (! $user) {
-      return $this->respond('tymon.jwt.invalid', 'User Not Found', 404);
+      return $this->respond('tymon.jwt.user_not_found', 'User Not Found', 404);
     }
 
     if (!$request->user()->ability(explode('|', $roles), explode('|', $permissions), array('validate_all' => $validateAll))) {
