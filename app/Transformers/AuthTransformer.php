@@ -15,17 +15,20 @@ class AuthTransformer extends TransformerAbstract
    */
   public function transform(User $user)
   {
+    $roles = UserHelper::getRoleNames($user);
+
     return [
-    'id'          => (int) $user->id,
-    'name'        => $user->name,
-    'email'       => $user->email,
-    'primary'     => $user->name,
-    'logged_in'   => $user->logged_in,
-    'secondary'   => $user->email,
-    'deletable'   => true,
-    'roles'       => UserHelper::getPermissionNames($user),
-    'permissions' => UserHelper::getRoleNames($user),
-    'menuList'    => UserHelper::getMenuList($user)
+      'id'          => (int) $user->id,
+      'name'        => $user->name,
+      'email'       => $user->email,
+      'primary'     => $user->name,
+      'logged_in'   => $user->logged_in,
+      'secondary'   => $user->email,
+      'deletable'   => true,
+      'roles'       => UserHelper::getPermissionNames($user),
+      'permissions' => $roles,
+      'menuList'    => UserHelper::getMenuList($user),
+      'isAdmin'     => in_array('admin', $roles->toArray())
     ];
   }
 }

@@ -9,7 +9,7 @@ class UserHelper
   public static function getPermissionNames(User $user) {
     $permissions = $user->roles->map(function($role) {
       $permissions = $role->permissions->map(function($permission) {
-        return $permission->name;
+        return strtolower($permission->name);
       });
       return $permissions;
     });
@@ -18,7 +18,7 @@ class UserHelper
 
   public static function getRoleNames(User $user) {
     $roleNames = $user->roles->map(function($role) {
-      return $role->name;
+      return strtolower($role->name);
     });
     return $roleNames->flatten();
   }
