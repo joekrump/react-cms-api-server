@@ -23,8 +23,8 @@ class AuthTransformer extends TransformerAbstract
       'email'       => $user->email,
       'logged_in'   => $user->logged_in,
       'deletable'   => true,
-      'roles'       => UserHelper::getPermissionNames($user),
-      'permissions' => $roles,
+      'roles'       => $rolesUser,
+      'permissions' => Helper::getPermissionNames($user),
       'menuList'    => UserHelper::getMenuList($user),
       'isAdmin'     => in_array('admin', $roles->toArray())
     ];
