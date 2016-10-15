@@ -22,9 +22,7 @@ class RoleTransformer extends TransformerAbstract
             'description'  => $role->description,
             'primary'      => $role->display_name,
             'secondary'    => $role->description,
-            'deletable'    => true,
-            // 'unmovable'    => false,
-            // 'denyNested'   => false
+            'deletable'    => true
         ];
     }
 

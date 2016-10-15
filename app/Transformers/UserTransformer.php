@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use App\User;
+use App\Helpers\UserHelper;
 
 class UserTransformer extends TransformerAbstract
 {
@@ -21,9 +22,7 @@ class UserTransformer extends TransformerAbstract
             'email'     => $user->email,
             'primary'   => $user->name,
             'secondary' => $user->email,
-            'deletable' => true,
-            // 'unmovable'    => false,
-            // 'denyNested'   => false
+            'deletable' => true
         ];
     }
 
