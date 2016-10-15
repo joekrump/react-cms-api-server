@@ -168,5 +168,6 @@ class AuthController extends Controller
         $currentUser = JWTAuth::parseToken()->authenticate();
         $currentUser->logged_in = false;
         $currentUser->save();
+        return $this->response->noContent();
     }
 }
