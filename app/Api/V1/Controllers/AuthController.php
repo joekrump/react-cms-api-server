@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Password;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Dingo\Api\Exception\ValidationHttpException;
 use App\Helpers\UserHelper;
+use App\Transformers\AuthTransformer;
 
 class AuthController extends Controller
 {
@@ -69,11 +70,11 @@ class AuthController extends Controller
         $user->logged_in = true;
         $user->save();
         $user = User::where('id', $user->id)->with('roles.permissions')->first();
-        $user->menuList = UserHelper::getMenuList($user);
-        
+        $authTransformer = new AuthTransformer();
+
         return response()->json([
             'token' => $token,
-            'user' => $user
+            'user' => $authTransformer->transform($user)
         ]);
     }
 

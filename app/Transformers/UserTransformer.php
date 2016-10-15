@@ -4,7 +4,6 @@ namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use App\User;
-use App\Helpers\UserHelper;
 
 class UserTransformer extends TransformerAbstract
 {

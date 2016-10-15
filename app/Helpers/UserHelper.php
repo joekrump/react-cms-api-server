@@ -16,6 +16,13 @@ class UserHelper
     return $permissions->flatten();
   }
 
+  public static function getRoleNames(User $user) {
+    $roleNames = $user->roles->map(function($role) {
+      return $role->name;
+    });
+    return $roleNames->flatten();
+  }
+
   public static function getMenuList(User $user) {
     $permissionNames = self::getPermissionNames($user);
     return $permissionNames;
