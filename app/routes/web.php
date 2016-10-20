@@ -10,6 +10,8 @@
 | to using a Closure or controller method. Build something great!
 |
 */
+Auth::routes();
+
 Route::get('/', function () {
     return view('welcome');
 });
