@@ -34,10 +34,12 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            'bindings'
             // 'throttle:60,1',
         ],
         'api-auth' => [
             'api.auth',
+            'bindings',
             'last_active',
             'jwt.refresh'
             // 'api.throttle:60,1'
