@@ -14,9 +14,6 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // })->middleware('auth:api');
 
-
-<?php
-
 $api = app('Dingo\Api\Routing\Router');
 
 // Routes without Auth requirement
