@@ -74,7 +74,7 @@ class PageController extends Controller
         // If there is an error for full_path it must be because it isn't unique. 
         // Therefore create a new unique slug and build a new full_path.
         $page->slug = PageHelper::makeSlug($page->slug);
-        $page->full_path = PageHelper::makeFullPath($page);
+        $page->full_path = PageHelper::makeFullPath($page, $page->parent_id ?: null);
       }
     }
     
@@ -125,7 +125,7 @@ class PageController extends Controller
       for($i = 1; $i < $numNodes; $i++) {
         $node = $nodesArray[$i];
         // dd($node);
-        if($node['parentIndex'] == 0) {
+        if($node['parentIndex'] <= 0) {
           $parentId = null;
         } else {
           $parentId = $nodesArray[$node['parentIndex']]['item_id'];
