@@ -28,7 +28,7 @@ class PageListTransformer extends TransformerAbstract
       
       foreach ($childPages as $key => $value) {
          $page_with_children['children'][] = $this->transform($value);
-         $page_with_children['children_ids'][] = $value->id;
+         $page_with_children['child_ids'][] = $value->id;
       }
       return $page_with_children;
     } else {
@@ -47,7 +47,7 @@ class PageListTransformer extends TransformerAbstract
       'primary'      => $page->name,
       'secondary'    => $page->full_path,
       'children'     => [],
-      'children_ids' => [],
+      'child_ids' => [],
       'unmovable'    => in_array($page->full_path, $this->unmovable_pages),
       'denyNested'   => in_array($page->full_path, $this->unmovable_pages)
     ];
