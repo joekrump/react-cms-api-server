@@ -28,6 +28,7 @@ class PageListTransformer extends TransformerAbstract
       
       foreach ($childPages as $key => $value) {
          $page_with_children['children'][] = $this->transform($value);
+         $page_with_children['children_ids'][] = $value->id;
       }
       return $page_with_children;
     } else {
@@ -37,17 +38,18 @@ class PageListTransformer extends TransformerAbstract
 
   public function getDefaultFields(Page $page) {
     return [
-      'id'          => $page->id,
-      'parent_id'   => $page->parent_id,
-      'deletable'   => $page->deletable,
-      'previewPath' => $page->full_path,
-      'depth'       => $page->depth,
-      'draft'       => $page->draft,
-      'primary'     => $page->name,
-      'secondary'   => $page->full_path,
-      'children'    => [],
-      'unmovable'   => in_array($page->full_path, $this->unmovable_pages),
-      'denyNested'  => in_array($page->full_path, $this->unmovable_pages)
+      'id'           => $page->id,
+      'parent_id'    => $page->parent_id,
+      'deletable'    => $page->deletable,
+      'previewPath'  => $page->full_path,
+      'depth'        => $page->depth,
+      'draft'        => $page->draft,
+      'primary'      => $page->name,
+      'secondary'    => $page->full_path,
+      'children'     => [],
+      'children_ids' => [],
+      'unmovable'    => in_array($page->full_path, $this->unmovable_pages),
+      'denyNested'   => in_array($page->full_path, $this->unmovable_pages)
     ];
   }
 }

@@ -21,7 +21,7 @@ class PageController extends Controller
   public function index()
   {
     $pages = Page::with('children')
-      // ->where('parent_id', null)
+      ->where('parent_id', null)
       ->orderBy('depth', 'asc')
       ->orderBy('position', 'asc')
       ->orderBy('name', 'asc')
