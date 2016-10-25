@@ -7,7 +7,9 @@ use App\Page;
 
 class PageListTransformer extends TransformerAbstract
 {
-  
+  private $unmovable_pages = [
+    '/home', '/login', '/signup'
+  ];
   /**
    * Turn the page into an associative array with nested children
    * if there are any.
@@ -44,8 +46,8 @@ class PageListTransformer extends TransformerAbstract
       'primary'     => $page->name,
       'secondary'   => $page->full_path,
       'children'    => [],
-      'unmovable'   => ($page->full_path == '/home'),
-      'denyNested'  => ($page->full_path == '/home')
+      'unmovable'   => in_array($page->full_path, $unmovable_pages),
+      'denyNested'  => in_array($page->full_path, $unmovable_pages)
     ];
   }
 }
