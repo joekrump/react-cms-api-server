@@ -26,13 +26,13 @@ class BookController extends Controller
   }
 
   public function updateIndex(Request $request) {
-    $nodesArray = $request->get('nodeArray');
+    $minimalArray = $request->get('minimalArray');
     $node;
-    if($nodesArray) {
-      $numNodes = count($nodesArray);
+    if($minimalArray) {
+      $numNodes = count($minimalArray);
       // Note: first entry is being skipped
       for($i = 1; $i < $numNodes; $i++) {
-        $node = $nodesArray[$i];
+        $node = $minimalArray[$i];
         Book::where('id', $node['item_id'])->update(['position' => $i]);
       }
       return $this->response->noContent()->setStatusCode(200);

@@ -117,23 +117,20 @@ class PageController extends Controller
   }
 
   public function updateIndex(Request $request) {
-    $nodesArray = $request->get('nodeArray');
+    $minimalArray = $request->get('minimalArray');
     $node;
     $nodesOrder = [];
 
-    if($nodesArray) {
-      $numNodes = count($nodesArray[0]['childIndexes']);
-      // Note: first entry is being skipped
-      for($i = 1; $i < $numNodes; $i++) {
-        $node = $nodesArray[$i];
-        // $nodesOrder[] = $node['item_id'];
+    if($minimalArray) {
+      $numNodes = count($minimalArray);
+      for($i = 0; $i < $numNodes; $i++) {
+        $node = $minimalArray[$i];
 
-        if($node['parentIndex'] <= 0) {
+        if($node['parent_id'] <= 0) {
           $parentId = null;
         } else {
-          $parentId = $nodesArray[$node['parentIndex']]['item_id'];
+          $parentId = $node['parent_id'];
         }
-        $nodesOrder[] = $parentId;
 
         $page = Page::findOrFail($node['item_id']);
         $page->full_path = PageHelper::makeFullPath($page, $parentId);
