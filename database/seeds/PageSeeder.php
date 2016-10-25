@@ -43,7 +43,7 @@ class PageSeeder extends Seeder
       'full_path' => '/',
       'slug' => '',
       'in_menu' => false,
-      'deleteable' => true,
+      'deletable' => true,
       'draft' => false,
       'position' => 1
     ]);
@@ -53,7 +53,7 @@ class PageSeeder extends Seeder
       'full_path' => '/about',
       'slug' => 'about',
       'in_menu' => false,
-      'deleteable' => true,
+      'deletable' => true,
       'draft' => true,
       'position' => 2
     ]);
@@ -63,7 +63,7 @@ class PageSeeder extends Seeder
       'full_path' => '/contact',
       'slug' => 'contact',
       'in_menu' => true,
-      'deleteable' => false,
+      'deletable' => false,
       'draft' => false,
       'position' => 3
     ]);
@@ -73,7 +73,7 @@ class PageSeeder extends Seeder
       'full_path' => '/login',
       'slug' => 'login',
       'in_menu' => true,
-      'deleteable' => false,
+      'deletable' => false,
       'draft' => false,
       'position' => 4
     ]);
@@ -83,7 +83,7 @@ class PageSeeder extends Seeder
       'full_path' => '/donate',
       'slug' => 'donate',
       'in_menu' => true,
-      'deleteable' => false,
+      'deletable' => false,
       'draft' => false,
       'position' => 5
     ]);

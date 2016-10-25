@@ -24,7 +24,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 
 	// Basic admin routes
 	// 
-	$api->post('auth/logout', 'App\Api\V1\Controllers\AuthController@logout');
+	$api->post('logout', 'App\Api\V1\Controllers\AuthController@logout');
 	$api->get('dashboard', 'App\Api\V1\Controllers\Admin\DashboardController@index');
 
 	

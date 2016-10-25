@@ -119,24 +119,41 @@ class PageController extends Controller
   public function updateIndex(Request $request) {
     $nodesArray = $request->get('nodeArray');
     $node;
+    $nodesOrder = [];
+
     if($nodesArray) {
-      $numNodes = count($nodesArray);
+      $numNodes = count($nodesArray[0]['childIndexes']);
       // Note: first entry is being skipped
       for($i = 1; $i < $numNodes; $i++) {
         $node = $nodesArray[$i];
-        // dd($node);
+        // $nodesOrder[] = $node['item_id'];
+
         if($node['parentIndex'] <= 0) {
           $parentId = null;
         } else {
           $parentId = $nodesArray[$node['parentIndex']]['item_id'];
         }
+        $nodesOrder[] = $parentId;
+
         $page = Page::findOrFail($node['item_id']);
         $page->full_path = PageHelper::makeFullPath($page, $parentId);
         $page->parent_id = $parentId;
-        $page->position = ($i + 1);
+        $page->position = $i;
         $page->save();
       }
-      return $this->response->noContent()->setStatusCode(200);
+
+      dd($nodesOrder);
+
+      $pages = Page::with('children')
+        ->where('parent_id', null)
+        ->orderBy('depth', 'asc')
+        ->orderBy('position', 'asc')
+        ->orderBy('name', 'asc')
+        ->get();
+
+
+      return $this->response->collection($pages, new PageListTransformer);
+      // return $this->response->noContent()->setStatusCode(200);
     } else {
       return $this->response->error('Update Failed, no data received.', 401);
     }
