@@ -142,7 +142,7 @@ class PageController extends Controller
         $page->save();
       }
 
-      dd($nodesOrder);
+      // dd($nodesOrder);
 
       $pages = Page::with('children')
         ->where('parent_id', null)
