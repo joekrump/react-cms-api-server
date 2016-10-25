@@ -7,6 +7,7 @@ use App\Page;
 
 class PageListTransformer extends TransformerAbstract
 {
+  
   /**
    * Turn the page into an associative array with nested children
    * if there are any.
@@ -35,6 +36,7 @@ class PageListTransformer extends TransformerAbstract
   public function getDefaultFields(Page $page) {
     return [
       'id'          => $page->id,
+      'parent_id'   => $page->parent_id,
       'deletable'   => $page->deletable,
       'previewPath' => $page->full_path,
       'depth'       => $page->depth,
