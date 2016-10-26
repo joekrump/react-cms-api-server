@@ -56,13 +56,11 @@ class RoleController extends Controller
 
   public function updateIndex(Request $request) {
     $minimalArray = $request->get('minimalArray');
-    $node;
+
     if($minimalArray) {
-      $numNodes = count($minimalArray);
-      // Note: first entry is being skipped
-      for($i = 1; $i < $minimalArray; $i++) {
-        $node = $minimalArray[$i];
-        Role::where('id', $node['item_id'])->update(['position' => $i]);
+      $i = 0;
+      foreach($minimalArray as $node) {
+        Role::where('id', $node['id'])->update(['position' => $i++]);
       }
       return $this->response->noContent()->setStatusCode(200);
     } else {

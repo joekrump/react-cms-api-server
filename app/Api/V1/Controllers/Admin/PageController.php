@@ -120,9 +120,8 @@ class PageController extends Controller
     $nodesOrder = [];
 
     if($minimalArray) {
-      $numNodes = count($minimalArray);
-      for($i = 0; $i < $numNodes; $i++) {
-        $node = $minimalArray[$i];
+      $i = 0;
+      foreach($minimalArray as $node) {
 
         if($node['parent_id'] == -1) {
           $node['parent_id'] = null;
@@ -131,7 +130,7 @@ class PageController extends Controller
         $page = Page::findOrFail($node['id']);
         $page->full_path = PageHelper::makeFullPath($page, $node['parent_id']);
         $page->parent_id = $node['parent_id'];
-        $page->position = $i;
+        $page->position = $i++;
         $page->save();
       }
 
