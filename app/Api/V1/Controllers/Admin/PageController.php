@@ -126,20 +126,16 @@ class PageController extends Controller
       for($i = 0; $i < $numNodes; $i++) {
         $node = $minimalArray[$i];
 
-        if($node['parent_id'] <= 0) {
-          $parentId = null;
-        } else {
-          $parentId = $node['parent_id'];
+        if($node['parent_id'] == -1) {
+          $node['parent_id'] = null;
         }
 
-        $page = Page::findOrFail($node['item_id']);
-        $page->full_path = PageHelper::makeFullPath($page, $parentId);
-        $page->parent_id = $parentId;
+        $page = Page::findOrFail($node['id']);
+        $page->full_path = PageHelper::makeFullPath($page, $node['parent_id']);
+        $page->parent_id = $node['parent_id'];
         $page->position = $i;
         $page->save();
       }
-
-      // dd($nodesOrder);
 
       $pages = Page::with('children')
         ->where('parent_id', null)
