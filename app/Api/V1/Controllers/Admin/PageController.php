@@ -106,11 +106,9 @@ class PageController extends Controller
 
   public function show($id)
   {
-
     $page = Page::find($id);
 
     if($page){
-
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
     } 
     return  $this->response->errorNotFound('Could Not Find details for Page with id=' . $id);
