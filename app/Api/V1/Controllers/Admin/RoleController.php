@@ -27,11 +27,11 @@ class RoleController extends Controller
    * @return Dingo\Api\Http\Response
    */
   public function attachPermission(Request $request){
-    $permissionIds = Permission::find($request->input('permissionIds'));
+    $permissionIds = $request->input('permissionIds');
     $role = Role::find($request->input('role_id'));
     if($permissionIds) {
       if($role) {
-        $role->permissions()->attach($permissionIds);
+        $role->permissions()->sync($permissionIds);
       } else {
         return $this->response->errorNotFound('Could Not Find details for Role with id=' . $request->input('role_id'));
       }

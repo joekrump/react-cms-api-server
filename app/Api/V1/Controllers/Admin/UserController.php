@@ -41,7 +41,7 @@ class UserController extends Controller
     $role = Role::find($request->input('role_id'));
     if($user) {
       if($role) {
-        $user->roles()->attach($role->id);
+        $user->roles()->sync([$role->id]);
       } else {
         return $this->response->errorNotFound('Could Not Find details for Role with id=' . $request->input('role_id'));
       }
