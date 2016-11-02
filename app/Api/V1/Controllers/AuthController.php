@@ -74,7 +74,8 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user' => $authTransformer->transform($user)
+            'user' => $authTransformer->transform($user),
+            'message' => 'Logged In!'
         ]);
     }
 
@@ -125,7 +126,9 @@ class AuthController extends Controller
 
         switch ($response) {
             case Password::RESET_LINK_SENT:
-                return $this->response->noContent();
+                return response()->json([
+                    'message' => 'Password Recovery Email Sent'
+                ]);
             case Password::INVALID_USER:
                 return $this->response->errorNotFound();
         }
