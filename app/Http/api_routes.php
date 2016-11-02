@@ -38,7 +38,7 @@ $api->group(['middleware' => ['api-auth'], 'version' => 'v1'], function ($api) {
 		$api->post('users', 'App\Api\V1\Controllers\Admin\UserController@store');
 
 		$api->group(['middleware' => ['ability:admin,permissions']], function($api) {
-			$api->post('attach-permission', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
+			$api->post('attach-permissions', 'App\Api\V1\Controllers\Admin\UserController@attachPermission');
 		});
 
 		$api->group(['middleware' => ['ability:admin,roles']], function($api) {
