@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use App\Role;
+use App\Helpers\RoleHelper;
 
 class RoleTransformer extends TransformerAbstract
 {
@@ -22,6 +23,7 @@ class RoleTransformer extends TransformerAbstract
             'description'  => $role->description,
             'primary'      => $role->display_name,
             'secondary'    => $role->description,
+            'permissions'  => RoleHelper::getPermissionNames($role),
             'deletable'    => true
         ];
     }
