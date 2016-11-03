@@ -151,7 +151,7 @@ class UserController extends Controller
    * @return Dingo\Api\Http\Response 
    */
   public function show(Request $request, $id){
-    if($user = User::find($id)){
+    if($user = User::with('roles')->find($id)){
       return $this->response->item($user, new UserTransformer)->setStatusCode(200);
     } 
     return  $this->response->errorNotFound('Could Not Find details for User with id=' . $id);
