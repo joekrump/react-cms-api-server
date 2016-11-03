@@ -66,23 +66,23 @@ class PageController extends Controller
 
     if(!$pagePath) {
      return $this->response->errorNotFound('Could not Find Page'); 
-   } else {
-    if($pagePath[0] != '/') {
-      $pagePath = '/' . $pagePath;
-    }
-    if($pagePath == '/') {
-      $pagePath = '/home';
-    }
-    try {
-      $page = Page::where('full_path', $pagePath)->firstOrFail();
-      return $this->response->item($page, new PageTransformer)->setStatusCode(200);
-    } catch (ModelNotFoundException $e) {
-      return $this->response->errorNotFound('Could not Find Page: ' . $pagePath);
-    } catch (Exception $e){
-      return $this->response->errorBadRequest($e);
+    } else {
+      if($pagePath[0] != '/') {
+        $pagePath = '/' . $pagePath;
+      }
+      if($pagePath == '/') {
+        $pagePath = '/home';
+      }
+      try {
+        $page = Page::where('full_path', $pagePath)->firstOrFail();
+        return $this->response->item($page, new PageTransformer)->setStatusCode(200);
+      } catch (ModelNotFoundException $e) {
+        return $this->response->errorNotFound('Could not Find Page: ' . $pagePath);
+      } catch (Exception $e){
+        return $this->response->errorBadRequest($e);
+      }
     }
   }
-}
 
   /**
    * Show the form for editing the specified resource.
