@@ -36,6 +36,15 @@ class PageSeeder extends Seeder
     $paymentPageTemplate = new PageTemplate(['name' => 'payment', 'display_name' => 'Payment Page']);
     $paymentPageTemplate->save();
 
+    $signupPageTemplate = new PageTemplate(['name' => 'signup', 'display_name' => 'Signup Page']);
+    $signupPageTemplate->save();
+
+    $recoverPasswordTemplate = new PageTemplate(['name' => 'forgot pw', 'display_name' => 'Recover Password page']);
+    $recoverPasswordTemplate->save();
+
+    $resetPasswordTemplate = new PageTemplate(['name' => 'reset pw', 'display_name' => 'Reset Password Page']);
+    $resetPasswordTemplate->save();
+
     // Seed minimal Pages
     // 
     $homePage = new Page([
@@ -88,11 +97,44 @@ class PageSeeder extends Seeder
       'position' => 5
     ]);
 
+    $signupPage = new Page([
+      'name' => 'Sign Up',
+      'full_path' => '/signup',
+      'slug' => 'signup',
+      'in_menu' => false,
+      'deletable' => false,
+      'draft' => false,
+      'position' => 6
+    ]);
+
+    $recoverPage = new Page([
+      'name' => 'Recover Password',
+      'full_path' => '/forgot-password',
+      'slug' => 'forgot-password',
+      'in_menu' => true,
+      'deletable' => false,
+      'draft' => false,
+      'position' => 7
+    ]);
+
+    $resetPage = new Page([
+      'name' => 'Reset Password',
+      'full_path' => '/reset-password',
+      'slug' => 'reset-password',
+      'in_menu' => true,
+      'deletable' => false,
+      'draft' => false,
+      'position' => 8
+    ]);
+
     $homePage->save();
     $aboutPage->save();
     $contactPage->save();
     $loginPage->save();
     $donationPage->save();
+    $signupPage->save();
+    $recoverPage->save();
+    $resetPage->save();
 
     // Assign tempaltes and resave.
     $homePage->template()->associate($basicTemplate);
@@ -100,12 +142,18 @@ class PageSeeder extends Seeder
     $contactPage->template()->associate($homeTemplate);
     $loginPage->template()->associate($loginPageTemplate);
     $donationPage->template()->associate($paymentPageTemplate);
+    $signupPage->save()->associate($signupPageTemplate);
+    $recoverPage->save()->associate($recoverPasswordTemplate);
+    $resetPage->save()->associate($resetPasswordTemplate);
 
     $homePage->save();
     $aboutPage->save();
     $contactPage->save();
     $loginPage->save();
     $donationPage->save();
+    $signupPage->save();
+    $recoverPage->save();
+    $resetPage->save();
   }
 }
 
