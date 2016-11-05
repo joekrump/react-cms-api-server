@@ -40,10 +40,10 @@ class PageSeeder extends Seeder
     // 
     $homePage = new Page([
       'name' => 'Home',
-      'full_path' => '/',
-      'slug' => '',
+      'full_path' => '/home',
+      'slug' => 'home',
       'in_menu' => false,
-      'deletable' => true,
+      'deletable' => false,
       'draft' => false,
       'position' => 1
     ]);
@@ -52,9 +52,9 @@ class PageSeeder extends Seeder
       'name' => 'About',
       'full_path' => '/about',
       'slug' => 'about',
-      'in_menu' => false,
-      'deletable' => true,
-      'draft' => true,
+      'in_menu' => true,
+      'deletable' => false,
+      'draft' => false,
       'position' => 2
     ]);
 
