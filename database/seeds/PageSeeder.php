@@ -142,9 +142,9 @@ class PageSeeder extends Seeder
     $contactPage->template()->associate($homeTemplate);
     $loginPage->template()->associate($loginPageTemplate);
     $donationPage->template()->associate($paymentPageTemplate);
-    $signupPage->save()->associate($signupPageTemplate);
-    $recoverPage->save()->associate($recoverPasswordTemplate);
-    $resetPage->save()->associate($resetPasswordTemplate);
+    $signupPage->template()->associate($signupPageTemplate);
+    $recoverPage->template()->associate($recoverPasswordTemplate);
+    $resetPage->template()->associate($resetPasswordTemplate);
 
     $homePage->save();
     $aboutPage->save();
