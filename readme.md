@@ -118,3 +118,47 @@ Thanks to the _barryvdh/laravel-cors_ package, you can handle CORS easily. Just 
 
 I currently removed the _VerifyCsrfToken_ middleware from the _$middleware_ array in _app/Http/Kernel.php_ file. If you want to use it in your project, just use the route middleware _csrf_ you can find, in the same class, in the _$routeMiddleware_ array.
 
+# Production Server Update (HowTo)
+
+### Node: 
+
+```bash
+npm run build-server
+npm run build
+cp -a build ./build-server
+cp -a images ./build-server
+```
+** pm is already running
+```bash
+pm2 restart server
+```
+** pm is not running 
+```bash
+cd ./build-server
+pm2 start server.js
+pm2 startup systemd
+```
+** ensure that pm2 is running
+```bash
+systemctl status pm2
+```
+** The list of applications currently managed by PM2 can also be looked up with the list subcommand:
+```bash
+pm2 list
+```
+** list details specific to 'server'
+```bash
+pm2 info server
+```
+** restart nginx to be safe
+```bash
+sudo systemctl restart nginx
+```
+
+### Laravel API:
+
+Do update then run: 
+```bash
+sudo systemctl restart apache2
+sudo systemctl restart nginx
+```
