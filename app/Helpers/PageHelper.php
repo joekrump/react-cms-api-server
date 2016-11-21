@@ -19,4 +19,26 @@ class PageHelper
   public static function makeSlug($value_to_sluggify) {
     return SlugService::createSlug(Page::class, 'slug', $value_to_sluggify);
   }
+
+  public static function makeSummary($content) {
+    if (strlen($str) < $n) {
+      return $str;
+    }
+
+    $str = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $str));
+
+    if (strlen($str) <= $n) {
+      return $str;
+    }
+
+    $out = "";
+    foreach (explode(' ', trim($str)) as $val) {
+      $out .= $val.' ';
+
+      if (strlen($out) >= $n) {
+        $out = trim($out);
+        return (strlen($out) == strlen($str)) ? $out : $out.$end_char;
+      }
+    }
+  }
 }
