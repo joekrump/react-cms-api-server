@@ -47,13 +47,6 @@ class PageController extends Controller
 
     $page = new Page($credentials);
 
-    // set some defaults
-    if(is_null($credentials['slug'])){
-      $page->slug = str_slug($page->name);
-    } else {
-      $page->slug = $credentials['slug'];
-    }
-
     if(is_null($credentials['in_menu'])){
       $page->in_menu = false;
     }
@@ -76,12 +69,12 @@ class PageController extends Controller
       } else {
         // If there is an error for full_path it must be because it isn't unique. 
         // Therefore create a new unique slug and build a new full_path.
-        $page->slug = PageHelper::makeSlug($page->slug);
+        $page->slug = PageHelper::makeSlug((is_null($credentials['slug']) ? str_slug($page->name) : $credentials['slug']));
         $page->full_path = PageHelper::makeFullPath($page, $page->parent_id ?: null);
       }
     }
     
-    if($page->save()){
+    try {
       // Assign content for the page.
       $page_content = $request->get('content');
       // If the content is longer than 21000 characters then split it 
@@ -89,25 +82,20 @@ class PageController extends Controller
       // 
       if($page_content && (strlen($page_content) > 21000)) {
         $content_chunks = str_split($page_content, 21000);
-        $page_parts = [];
-
-        foreach($content_chunks as $chunk) {
-          $page_parts[] = new PagePart(['content' => $chunk]);
-        }
-
         $page->summary = PageHelper::makeSummary($content_chunks[0]);
         $page->save();
-        $page->parts()->saveMany($page_parts);
       } else if($page_content) {
         $page->summary = PageHelper::makeSummary($page_content);
         $page->save();
-        $page->parts()->save(new PagePart(['content' => $page_content]));
       } else {
-        // no content in the page. 
+        $page->summary = PageHelper::makeSummary($page->name);
+        $page->save();
       }
 
+      $page->savePageContent($page_content);
+
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
-    } else {
+    } catch (Exception $e) {
       return $this->response->error('Error, could not create the page', 500);
     }
   }
