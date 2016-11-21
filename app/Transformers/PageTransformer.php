@@ -30,6 +30,9 @@ class PageTransformer extends TransformerAbstract
         'primary'         => $page->name,
         'use_editor'      => true,
         'content'         => $page->contents(),
+        'summary'         => $page->summary,
+        'show_title'      => $page->show_title,
+        'image_url'       => $page->image_url,
         'templates'       => PageTemplate::orderBy('display_name', 'asc')->get(['display_name', 'id'])
         // 'secondary'   => $page->full_path
       ];

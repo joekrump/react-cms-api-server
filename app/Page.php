@@ -18,7 +18,10 @@ class Page extends Model
     'slug',
     'position',
     'template_id',
-    'parent_id'
+    'parent_id',
+    'summary',
+    'image_url',
+    'show_title'
   ];
 
   /**
@@ -28,11 +31,11 @@ class Page extends Model
    */
   public function sluggable()
   {
-      return [
-          'slug' => [
-              'source' => 'name'
-          ]
-      ];
+    return [
+      'slug' => [
+        'source' => 'name'
+      ]
+    ];
   }
 
   public function children() {
@@ -41,17 +44,17 @@ class Page extends Model
 
   public function parent()
   {
-      return $this->belongsTo('App\Page', 'parent_id');
+    return $this->belongsTo('App\Page', 'parent_id');
   }
 
   public function template()
   {
-      return $this->belongsTo('App\PageTemplate', 'template_id');
+    return $this->belongsTo('App\PageTemplate', 'template_id');
   }
 
   public function parts()
   {
-      return $this->hasMany('App\PagePart');
+    return $this->hasMany('App\PagePart');
   }
 
   public function contents() {

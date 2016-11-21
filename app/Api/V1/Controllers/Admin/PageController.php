@@ -96,9 +96,11 @@ class PageController extends Controller
         }
 
         $page->summary = PageHelper::makeSummary($content_chunks[0]);
+        $page->save();
         $page->parts()->saveMany($page_parts);
       } else if($page_content) {
         $page->summary = PageHelper::makeSummary($page_content);
+        $page->save();
         $page->parts()->save(new PagePart(['content' => $page_content]));
       } else {
         // no content in the page. 

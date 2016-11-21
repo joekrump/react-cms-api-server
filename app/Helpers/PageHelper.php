@@ -21,7 +21,7 @@ class PageHelper
   }
 
   public static function makeSummary($content, $n = 200, $end_char = '&#8230;') {
-    $content = strip_tags(preg_replace('/<img[^>]+>(<\/img>)?|<iframe.+?<\/iframe>/g', '', $content));
+    $content = strip_tags(preg_replace('/<img[^>]+>(<\/img>)?|<iframe.+?<\/iframe>/i', '', $content));
 
     if (strlen($content) < $n) {
       return $content;
