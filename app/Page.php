@@ -10,18 +10,15 @@ class Page extends Model
   use Sluggable;
 
   protected $fillable = [
-    'in_menu',
     'name',
-    'deletable',
-    'depth',
-    'draft',
+    'in_menu',
     'slug',
-    'position',
+    'draft',
     'template_id',
     'parent_id',
     'summary',
-    'image_url',
-    'show_title'
+    'show_title',
+    'image_url'
   ];
 
   /**
@@ -65,5 +62,21 @@ class Page extends Model
     }
 
     return $partsWithContent;
+  }
+
+
+  public function savePageContent($page_content) {
+    if($page_content && (strlen($page_content) > 21000)) {
+      $content_chunks = str_split($page_content, 21000);
+      $page_parts = [];
+
+      foreach($content_chunks as $chunk) {
+        $page_parts[] = new PagePart(['content' => $chunk]);
+      }
+
+      $this->parts()->saveMany($page_parts);
+    } else if($page_content) {
+      $this->parts()->save(new PagePart(['content' => $page_content]));
+    }
   }
 }

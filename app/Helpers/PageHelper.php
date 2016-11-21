@@ -24,13 +24,13 @@ class PageHelper
     $content = strip_tags(preg_replace('/<img[^>]+>(<\/img>)?|<iframe.+?<\/iframe>/i', '', $content));
 
     if (strlen($content) < $n) {
-      return $content;
+      return trim($content);
     }
 
     $content = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $content));
 
     if (strlen($content) <= $n) {
-      return $content;
+      return trim($content);
     }
 
     $out = "";
@@ -39,7 +39,7 @@ class PageHelper
 
       if (strlen($out) >= $n) {
         $out = trim($out);
-        return (strlen($out) == strlen($content)) ? $out : $out.$end_char;
+        return trim((strlen($out) == strlen($content)) ? $out : $out.$end_char);
       }
     }
   }

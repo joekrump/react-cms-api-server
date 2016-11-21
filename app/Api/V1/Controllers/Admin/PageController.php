@@ -33,64 +33,31 @@ class PageController extends Controller
 
   public function store(Request $request)
   { 
-    $credentials = $request->only([
-      'name', 
-      'in_menu', 
-      'draft', 
-      'slug', 
-      'template_id', 
-      'parent_id',
-      'summary',
-      'show_title',
-      'image_url'
-    ]);
-
+    $credentials = $request->only((new Page)->getFillable());
     $page = new Page($credentials);
+    $page->slug = PageHelper::makeSlug((is_null($credentials['slug']) ? str_slug($page->name) : $credentials['slug']));
+    $page->full_path = PageHelper::makeFullPath($page, $page->parent_id ?: null);
 
-    if(is_null($credentials['in_menu'])){
-      $page->in_menu = false;
-    }
-
-    if(is_null($credentials['draft'])){
-      $page->draft = false;
-    }
-
-    $page->full_path = PageHelper::makeFullPath($page, null);
-
-    $validator = Validator::make($page->getAttributes(), [
-        'name' => 'required',
-        'template_id' => 'required|integer|min:1',
-        'full_path' => 'unique:pages'
+    $validator = Validator::make($credentials, [
+      'name' => 'required',
+      'template_id' => 'required|integer|min:1',
+      'full_path' => 'unique:pages'
     ]);
-
-    if($validator->fails()) {
-      if(empty($validator->errors()->get('full_path'))){
-        throw new ValidationHttpException($validator->errors());
-      } else {
-        // If there is an error for full_path it must be because it isn't unique. 
-        // Therefore create a new unique slug and build a new full_path.
-        $page->slug = PageHelper::makeSlug((is_null($credentials['slug']) ? str_slug($page->name) : $credentials['slug']));
-        $page->full_path = PageHelper::makeFullPath($page, $page->parent_id ?: null);
-      }
-    }
     
     try {
-      // Assign content for the page.
+
       $page_content = $request->get('content');
-      // If the content is longer than 21000 characters then split it 
-      // amongst multiple page parts to ensure content isn't trucated
-      // 
+
       if($page_content && (strlen($page_content) > 21000)) {
         $content_chunks = str_split($page_content, 21000);
         $page->summary = PageHelper::makeSummary($content_chunks[0]);
-        $page->save();
       } else if($page_content) {
         $page->summary = PageHelper::makeSummary($page_content);
-        $page->save();
       } else {
         $page->summary = PageHelper::makeSummary($page->name);
-        $page->save();
       }
+
+      $page->save();
 
       $page->savePageContent($page_content);
 
