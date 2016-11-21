@@ -20,24 +20,24 @@ class PageHelper
     return SlugService::createSlug(Page::class, 'slug', $value_to_sluggify);
   }
 
-  public static function makeSummary($content) {
-    if (strlen($str) < $n) {
-      return $str;
+  public static function makeSummary($content, $n = 200, $end_char = '&#8230;') {
+    if (strlen($content) < $n) {
+      return $content;
     }
 
-    $str = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $str));
+    $content = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $content));
 
-    if (strlen($str) <= $n) {
-      return $str;
+    if (strlen($content) <= $n) {
+      return $content;
     }
 
     $out = "";
-    foreach (explode(' ', trim($str)) as $val) {
+    foreach (explode(' ', trim($content)) as $val) {
       $out .= $val.' ';
 
       if (strlen($out) >= $n) {
         $out = trim($out);
-        return (strlen($out) == strlen($str)) ? $out : $out.$end_char;
+        return (strlen($out) == strlen($content)) ? $out : $out.$end_char;
       }
     }
   }
