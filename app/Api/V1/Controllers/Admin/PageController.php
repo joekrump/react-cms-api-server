@@ -39,8 +39,11 @@ class PageController extends Controller
       'draft', 
       'slug', 
       'template_id', 
-      'parent_id']
-    );
+      'parent_id',
+      'summary',
+      'show_title',
+      'image_url'
+    ]);
 
     $page = new Page($credentials);
 
@@ -79,7 +82,6 @@ class PageController extends Controller
     }
     
     if($page->save()){
-
       // Assign content for the page.
       $page_content = $request->get('content');
       // If the content is longer than 21000 characters then split it 
@@ -88,11 +90,15 @@ class PageController extends Controller
       if($page_content && (strlen($page_content) > 21000)) {
         $content_chunks = str_split($page_content, 21000);
         $page_parts = [];
+
         foreach($content_chunks as $chunk) {
           $page_parts[] = new PagePart(['content' => $chunk]);
         }
+
+        $page->summary = PageHelper::makeSummary($content_chunks[0]);
         $page->parts()->saveMany($page_parts);
       } else if($page_content) {
+        $page->summary = PageHelper::makeSummary($page_content);
         $page->parts()->save(new PagePart(['content' => $page_content]));
       } else {
         // no content in the page. 
@@ -157,7 +163,7 @@ class PageController extends Controller
     }
 
     $specialFields = $request->only(['slug', 'template_id', 'parent_id']);
-    $basicFields = $request->only(['name', 'in_menu', 'draft']);
+    $basicFields = $request->only(['name', 'in_menu', 'draft', 'show_title', 'summary', 'image_url']);
     
     if(!is_null($specialFields['slug']) && ($specialFields['slug'] != $page->slug)){
       $page->slug = $specialFields['slug'];
