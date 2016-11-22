@@ -116,7 +116,7 @@ class Page extends Model
 
     if(strlen($page_content) > $maxLength) {
       $content_chunks = str_split($page_content, $maxLength);
-      $existingPageParts = $page->parts;
+      $existingPageParts = $this->parts;
       $existingPartCount = $existingPageParts->count();
       $num_chunks = count($content_chunks);
       $newParts = Page::updateExistingContentChunks($this, $content_chunks, $existingPageParts, $existingPartCount);
@@ -124,24 +124,24 @@ class Page extends Model
       Page::removeExtraPageParts();
 
       if(count($newParts) > 0) {
-        $page->parts()->saveMany($newParts);
+        $this->parts()->saveMany($newParts);
       }
       
     } else {
-      $existingPartCount = $page->parts()->count();
+      $existingPartCount = $this->parts()->count();
 
       if($existingPartCount > 0) {
-        $first_page_part = $page->parts->first();
+        $first_page_part = $this->parts->first();
         $first_page_part->update(['content' => $page_content]);
 
         if($existingPartCount > 1) {
-          $other_part_ids = $page->parts()
+          $other_part_ids = $this->parts()
             ->whereNotIn('id', [$first_page_part->id])
             ->lists('page_parts.id');
           PagePart::whereIn('id',$other_part_ids)->delete();
         }
       } else {
-        $page->parts()->save(new PagePart(['content' => $page_content]));
+        $this->parts()->save(new PagePart(['content' => $page_content]));
       }
     }
   }
