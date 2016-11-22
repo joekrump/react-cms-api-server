@@ -65,9 +65,9 @@ class Page extends Model
   }
 
 
-  public function savePageContent($page_content) {
-    if($page_content && (strlen($page_content) > 21000)) {
-      $content_chunks = str_split($page_content, 21000);
+  public function savePageContent($page_content, $maxLength = 21000) {
+    if($page_content && (strlen($page_content) > $maxLength)) {
+      $content_chunks = str_split($page_content, $maxLength);
       $page_parts = [];
 
       foreach($content_chunks as $chunk) {
@@ -77,6 +77,72 @@ class Page extends Model
       $this->parts()->saveMany($page_parts);
     } else if($page_content) {
       $this->parts()->save(new PagePart(['content' => $page_content]));
+    }
+  }
+
+  private static function updateExistingContentChunks($page, $content_chunks, $existingPageParts, $existingPartCount) {
+    
+    $page_parts = [];
+    $i = 0;
+
+    foreach($content_chunks as $chunk) {
+      if($existingPartCount > ($i + 1)) {
+        $existingPageParts[$i]['content'] = $chunk;
+        $existingPageParts[$i]->save();
+        $i++;
+      } else {
+        $page_parts[] = new PagePart(['content' => $chunk]);
+      } 
+    }
+
+    return $page_parts;
+  }
+
+  private static function removeExtraPageParts($existingPartCount, $existingPageParts, $num_chunks) {
+    // If there are few parts than previously, delete the extra parts.
+    // 
+    if($existingPartCount > $num_chunks) {
+      $pagePartIds = [];
+      $i = $num_chunks;
+
+      for($j = $i; $j < $existingPartCount; $j++){
+        $pagePartIds[] = $existingPageParts[$j]->id;
+      }
+      PagePart::whereIn('id', $pagePartIds)->delete();
+    }
+  }
+
+  public function updatePageContent($page_content, $maxLength = 21000) {
+
+    if(strlen($page_content) > $maxLength) {
+      $content_chunks = str_split($page_content, $maxLength);
+      $existingPageParts = $page->parts;
+      $existingPartCount = $existingPageParts->count();
+      $num_chunks = count($content_chunks);
+      $newParts = Page::updateExistingContentChunks($this, $content_chunks, $existingPageParts, $existingPartCount);
+
+      Page::removeExtraPageParts();
+
+      if(count($newParts) > 0) {
+        $page->parts()->saveMany($newParts);
+      }
+      
+    } else {
+      $existingPartCount = $page->parts()->count();
+
+      if($existingPartCount > 0) {
+        $first_page_part = $page->parts->first();
+        $first_page_part->update(['content' => $page_content]);
+
+        if($existingPartCount > 1) {
+          $other_part_ids = $page->parts()
+            ->whereNotIn('id', [$first_page_part->id])
+            ->lists('page_parts.id');
+          PagePart::whereIn('id',$other_part_ids)->delete();
+        }
+      } else {
+        $page->parts()->save(new PagePart(['content' => $page_content]));
+      }
     }
   }
 }

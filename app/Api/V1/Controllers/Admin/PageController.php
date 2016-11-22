@@ -30,7 +30,6 @@ class PageController extends Controller
     return $this->response->collection($pages, new PageListTransformer);
   }
 
-
   public function store(Request $request)
   { 
     $credentials = $request->only((new Page)->getFillable());
@@ -45,7 +44,6 @@ class PageController extends Controller
     ]);
     
     try {
-
       $page_content = $request->get('content');
 
       if($page_content && (strlen($page_content) > 21000)) {
@@ -58,7 +56,6 @@ class PageController extends Controller
       }
 
       $page->save();
-
       $page->savePageContent($page_content);
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
@@ -104,7 +101,6 @@ class PageController extends Controller
         ->orderBy('name', 'asc')
         ->get();
 
-
       return $this->response->collection($pages, new PageListTransformer);
       // return $this->response->noContent()->setStatusCode(200);
     } else {
@@ -136,100 +132,31 @@ class PageController extends Controller
       'full_path' => "unique:pages,full_path,{$page->id}"
     ]);
 
-    if($validator->fails()) {
-      if(empty($validator->errors()->get('full_path'))){
-        throw new ValidationHttpException($validator->errors());
-      } else {
-        // If there is an error for full_path it must be because it isn't unique. 
-        // Therefore create a new unique slug and build a new full_path.
-        $page->slug = PageHelper::makeSlug($page->slug);
-        $page->full_path = PageHelper::makeFullPath($page, $page->parent_id);
-      }
-    }
     // Make sure were are not trying to save empty or null values which might overwrite existing
     // values.
     foreach ($basicFields as $attr_name => $value) {
       if(!is_null($value) && strlen($value)){
-        $page[$attr_name] = $value;
+        $page[$attr_name] = trim(strip_tags($value));
       }
     }
 
+    if(!is_null($specialFields['parent_id']) && $specialFields['parent_id'] != $page->parent_id) {
+      // Assign this page to its parent.
+      $parent = Page::find($specialFields['parent_id']);
+      $parent->children()->save($page);
+    }
+
     if($page->save()){
-      // Assign content for the page.
-      //
-      if(!is_null($specialFields['parent_id']) && $specialFields['parent_id'] != $page->parent_id) {
-        // Assign this page to its parent.
-        $parent = Page::find($specialFields['parent_id']);
-        $parent->children()->save($page);
-      }
 
       $page_content = $request->get('content');
 
       if($page_content){
-        // If the content is longer than 21000 characters then split it amongst 
-        // multiple page parts to ensure content isn't trucated
-        // 
-        if(strlen($page_content) > 21000) {
-          $content_chunks = str_split($page_content, 21000);
-          $existing_page_parts = $page->parts;
-          $num_existing_parts = $existing_page_parts->count();
-          $num_chunks = count($content_chunks);
-
-          $page_parts = [];
-          $i = 0;
-          foreach($content_chunks as $chunk) {
-            if($num_existing_parts > ($i + 1)) {
-              $existing_page_parts[$i]['content'] = $chunk;
-              $existing_page_parts[$i]->save();
-              $i++;
-            } else {
-              $page_parts[] = new PagePart(['content' => $chunk]);
-            } 
-          }
-
-          // If there are few parts than previously, delete the extra parts.
-          // 
-          if($num_existing_parts > $num_chunks) {
-            $part_ids_to_remove = [];
-
-            return $this->response
-              ->array(['num_to_delete' => $num_existing_parts - $num_chunks])
-              ->setStatusCode(200);
-
-            for($j = $i; $j < $num_existing_parts; $j++){
-              $part_ids_to_remove[] = $num_existing_parts[$j]->id;
-            }
-            PagePart::whereIn('id',$part_ids_to_remove)->delete();
-          }
-
-          if(count($page_parts) > 0) {
-            $page->parts()->saveMany($page_parts);
-          }
-          
-        } else {
-          $num_parts = $page->parts()->count();
-
-          if($num_parts > 0) {
-            $first_page_part = $page->parts->first();
-            $first_page_part->content = $page_content;
-            $first_page_part->save();
-            if($num_parts > 1) {
-              $other_part_ids = $page->parts()
-                ->whereNotIn('id', [$first_page_part->id])
-                ->lists('page_parts.id');
-              PagePart::whereIn('id',$other_part_ids)->delete();
-            }
-          } else {
-            // If somehow there was no content for the page yet, create a new PagePart with content for the page.
-            // 
-            $page->parts()->save(new PagePart(['content' => $page_content]));
-          }
-        }
+        $page->updatePageContent($page_content);
       }
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
     } else {
-      return $this->response->error('could_not_update_page', 500);
+      return $this->response->error('Could not update page', 500);
     }
   }
 
