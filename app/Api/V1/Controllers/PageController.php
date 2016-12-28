@@ -28,7 +28,7 @@ class PageController extends Controller
         $pagePath = '/home';
       }
       try {
-        $page = Page::where('full_path', $pagePath)->firstOrFail();
+        $page = Page::where('full_path', $pagePath)->where('draft', false)->firstOrFail();
         return $this->response->item($page, new PageTransformer)->setStatusCode(200);
       } catch (ModelNotFoundException $e) {
         return $this->response->errorNotFound('Could not Find Page: ' . $pagePath);
