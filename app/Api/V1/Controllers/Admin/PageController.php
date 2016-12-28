@@ -33,6 +33,7 @@ class PageController extends Controller
   public function store(Request $request)
   { 
     $credentials = $request->only((new Page)->getFillable());
+
     $page = new Page($credentials);
     $page->slug = PageHelper::makeSlug((is_null($credentials['slug']) ? str_slug($page->name) : $credentials['slug']));
     $page->full_path = PageHelper::makeFullPath($page, $page->parent_id ?: null);
@@ -137,6 +138,8 @@ class PageController extends Controller
     foreach ($basicFields as $attr_name => $value) {
       if(!is_null($value) && strlen($value)){
         $page[$attr_name] = trim(strip_tags($value));
+      } else if(!is_null($value)) {
+        $page[$attr_name] = $value;
       }
     }
 
