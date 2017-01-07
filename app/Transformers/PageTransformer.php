@@ -44,10 +44,11 @@ class PageTransformer extends TransformerAbstract
 
   public function transform(Page $page, $isChildPage = false)
   {
-    if($page->children->count() > 0 && !$isChildPage) {
+    if($page->children()->where('draft', false)->count() > 0 && !$isChildPage) {
       $page_with_children = $this->getDefaultFields($page);
       
       $childPages = $page->children()
+        ->where('draft', false)
         ->orderBy('depth', 'asc')
         ->orderBy('position', 'asc')
         ->orderBy('name', 'asc')->get();

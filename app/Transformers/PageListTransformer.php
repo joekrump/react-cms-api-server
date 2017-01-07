@@ -47,7 +47,7 @@ class PageListTransformer extends TransformerAbstract
       'primary'      => $page->name,
       'secondary'    => $page->full_path,
       'children'     => [],
-      'child_ids' => [],
+      'child_ids'    => [],
       'unmovable'    => in_array($page->full_path, $this->unmovable_pages),
       'denyNested'   => in_array($page->full_path, $this->unmovable_pages)
     ];
