@@ -114,15 +114,17 @@ class AuthController extends Controller
 
   public function recovery(Request $request)
   {
-    $validator = Validator::make($request->only('email'), [
+    $params = $request->only('email');
+
+    $validator = Validator::make($params, [
       'email' => 'required'
-      ]);
+    ]);
 
     if($validator->fails()) {
       throw new ValidationHttpException($validator->errors()->all());
     }
 
-    $response = Password::sendResetLink($request->only('email'), function (Message $message) {
+    $response = Password::sendResetLink($params, function (Message $message) {
       $message->subject(Config::get('boilerplate.recovery_email_subject'));
     });
 
@@ -130,9 +132,9 @@ class AuthController extends Controller
       case Password::RESET_LINK_SENT:
         return response()->json([
           'message' => 'Password Recovery Email Sent'
-          ]);
+        ]);
       case Password::INVALID_USER:
-        return $this->response->errorNotFound();
+        return $this->response->error("Sorry, no email matching {$params['email']} was found.", 404);
     }
   }
 
@@ -165,7 +167,7 @@ class AuthController extends Controller
       return $this->response->noContent();
 
       default:
-      return $this->response->error('could_not_reset_password', 500);
+      return $this->response->error('Could Not Reset Passord', 500);
     }
   }
 
