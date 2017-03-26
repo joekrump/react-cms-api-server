@@ -167,7 +167,7 @@ class AuthController extends Controller
       return $this->response->noContent();
 
       default:
-      return $this->response->error('Could Not Reset Passord', 500);
+      return $this->response->error('Could Not Reset Password', 500);
     }
   }
 

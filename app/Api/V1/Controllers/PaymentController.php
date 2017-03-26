@@ -33,7 +33,7 @@ class PaymentController extends Controller
       // DEBUGGING TIP: NOTE THAT IF AN INVALID PARAM IS PASSED TO THE CHARGE METHOD (ie. an invalid token or param name) THIS METHOD WILL SIMPLY RETURN 200 and the charge request is silently ignored. 
       // 
       $token = $request->get('token');
-      
+      $amt = $request->get('amt');
       // TODO: Feature: Could do something with the values returned in cahrge if desired...
       //       perhaps store stripe customer id with user.
       $charge = \Stripe\Charge::create([
