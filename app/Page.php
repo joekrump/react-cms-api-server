@@ -109,7 +109,7 @@ class Page extends Model
     );
 
     if(count($additional_parts) > 0) {
-      $this->parts()->saveMany($additional_parts);
+      $page->parts()->saveMany($additional_parts);
     }
   }
 
