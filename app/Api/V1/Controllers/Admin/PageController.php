@@ -45,16 +45,14 @@ class PageController extends Controller
     ]);
     
     try {
-      $page_content = $request->get('content');
-
-      if($page_content && (strlen($page_content) > 21000)) {
-        $content_chunks = str_split($page_content, 21000);
-        $page->summary = PageHelper::makeSummary($content_chunks[0]);
-      } else if($page_content) {
-        $page->summary = PageHelper::makeSummary($page_content);
+      $summary = $request->get("summary");
+      if($summary) {
+        $page->summary = $summary;
       } else {
-        $page->summary = PageHelper::makeSummary($page->name);
+        $content = $request->get("content");
+        $page->summary = PageHelper::makeSummary($content, $page);
       }
+
 
       $page->save();
       $page->savePageContent($page_content);

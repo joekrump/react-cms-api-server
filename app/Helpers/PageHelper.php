@@ -20,27 +20,19 @@ class PageHelper
     return SlugService::createSlug(Page::class, 'slug', $value_to_sluggify);
   }
 
-  public static function makeSummary($content, $n = 200, $end_char = '&#8230;') {
+  public static function makeSummary($content, $page, $n = 200) {
+
+    if(!$content) {
+      $content = $page->name; // default to page name if no page content provided
+    }
+
     $content = strip_tags(preg_replace('/<img[^>]+>(<\/img>)?|<iframe.+?<\/iframe>/i', '', $content));
+    $content = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $content));
 
     if (strlen($content) < $n) {
       return trim($content);
-    }
-
-    $content = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $content));
-
-    if (strlen($content) <= $n) {
-      return trim($content);
-    }
-
-    $out = "";
-    foreach (explode(' ', trim($content)) as $val) {
-      $out .= $val.' ';
-
-      if (strlen($out) >= $n) {
-        $out = trim($out);
-        return trim((strlen($out) == strlen($content)) ? $out : $out.$end_char);
-      }
+    } else {
+      return substr($content, 0, $n) . "...";
     }
   }
 }
