@@ -38,7 +38,7 @@ class PageController extends Controller
     $page->slug = PageHelper::makeSlug((is_null($credentials['slug']) ? str_slug($page->name) : $credentials['slug']));
     $page->full_path = PageHelper::makeFullPath($page, $page->parent_id ?: null);
     $content = $request->get("content");
-    
+
     $validator = Validator::make($credentials, [
       'name' => 'required',
       'template_id' => 'required|integer|min:1',
@@ -56,7 +56,7 @@ class PageController extends Controller
       $page->save();
       $page->savePageContent($content);
 
-      return $this->response->item($page, new PageTransformer)->setStatusCode(200);
+      return $this->response->item($page, new PageTransformer)->setStatusCode(201);
     } catch (Exception $e) {
       return $this->response->error('Error, could not create the page', 500);
     }
@@ -184,7 +184,7 @@ class PageController extends Controller
             $child->save();
           }
         }
-        return $this->response->noContent()->setStatusCode(200);
+        return $this->response->noContent()->setStatusCode(204);
       } else {
         return $this->response->errorBadRequest("Could Note Remove the Page with id={$id}");
       }
