@@ -37,7 +37,8 @@ class PageController extends Controller
     $page = new Page($credentials);
     $page->slug = PageHelper::makeSlug((is_null($credentials['slug']) ? str_slug($page->name) : $credentials['slug']));
     $page->full_path = PageHelper::makeFullPath($page, $page->parent_id ?: null);
-
+    $content = $request->get("content");
+    
     $validator = Validator::make($credentials, [
       'name' => 'required',
       'template_id' => 'required|integer|min:1',
@@ -49,13 +50,11 @@ class PageController extends Controller
       if($summary) {
         $page->summary = $summary;
       } else {
-        $content = $request->get("content");
         $page->summary = PageHelper::makeSummary($content, $page);
       }
 
-
       $page->save();
-      $page->savePageContent($page_content);
+      $page->savePageContent($content);
 
       return $this->response->item($page, new PageTransformer)->setStatusCode(200);
     } catch (Exception $e) {
