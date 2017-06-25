@@ -27,7 +27,7 @@ class PageTransformer extends TransformerAbstract
       'summary'         => $page->summary,
       'show_title'      => $page->show_title,
       'image_url'       => $page->image_url,
-      'templates'       => PageTemplate::orderBy('display_name', 'asc')->get(['display_name', 'id']),
+      'templates'       => PageTemplate::orderBy('display_name', 'asc')->get(['display_name as displayName', 'id']),
       'children'        => [],
     ];
   }
