@@ -14,10 +14,9 @@ class PageTemplateTransformer extends TransformerAbstract
    */
   public function transform(PageTemplate $page_template)
   {
-
     return [
-      'id'           => $page_template->id,
-      'display_name' => $page_template->display_name,
+      "id" => $page_template->id,
+      "displayName" => $page_template->display_name,
     ];
   }
 }

@@ -16,13 +16,13 @@ class UserTransformer extends TransformerAbstract
   {
     $role = $user->roles()->first();
     return [
-    'id'        => (int) $user->id,
-    'name'      => $user->name,
-    'email'     => $user->email,
-    'primary'   => $user->name,
-    'secondary' => $user->email,
-    'deletable' => true,
-    'role'      => ['id' => $role->id, 'name' => $role->name, 'display_name' => $role->display_name]
+      'id'        => (int) $user->id,
+      'name'      => $user->name,
+      'email'     => $user->email,
+      'primary'   => $user->name,
+      'secondary' => $user->email,
+      'deletable' => true,
+      'role'      => ['id' => $role->id, 'name' => $role->name, 'display_name' => $role->display_name]
     ];
   }
 }
