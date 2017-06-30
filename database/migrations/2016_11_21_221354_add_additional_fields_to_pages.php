@@ -27,9 +27,9 @@ class AddAdditionalFieldsToPages extends Migration
     public function down()
     {
         Schema::table('pages', function (Blueprint $table) {
-            $table->string('image_url')->nullable();
-            $table->text('summary');
-            $table->boolean('show_title')->default(true);
+            $table->dropColumn('image_url');
+            $table->dropColumn('summary');
+            $table->dropColumn('show_title');
         });
     }
 }
