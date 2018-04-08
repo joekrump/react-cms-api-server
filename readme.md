@@ -128,29 +128,29 @@ npm run build
 cp -a build ./build-server
 cp -a images ./build-server
 ```
-** pm is already running
+**pm is already running**
 ```bash
 pm2 restart server
 ```
-** pm is not running 
+**pm is not running**
 ```bash
 cd ./build-server
 pm2 start server.js
 pm2 startup systemd
 ```
-** ensure that pm2 is running
+**ensure that pm2 is running**
 ```bash
 systemctl status pm2
 ```
-** The list of applications currently managed by PM2 can also be looked up with the list subcommand:
+**The list of applications currently managed by PM2 can also be looked up with the list subcommand:**
 ```bash
 pm2 list
 ```
-** list details specific to 'server'
+**list details specific to 'server'**
 ```bash
 pm2 info server
 ```
-** restart nginx to be safe
+**restart nginx to be safe**
 ```bash
 sudo systemctl restart nginx
 ```
