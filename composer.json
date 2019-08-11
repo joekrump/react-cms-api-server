@@ -1,27 +1,31 @@
 {
     "name": "laravel/laravel",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
-	    "tymon/jwt-auth": "0.5.*",
+        "php": "^7",
+        "laravel/framework": "^5.8.0",
+        "tymon/jwt-auth": "0.5.*",
         "dingo/api": "1.0.*@dev",
         "zizaco/entrust": "dev-laravel-5",
-        "stripe/stripe-php": "^3.20",
-        "barryvdh/laravel-cors": "^0.8.1",
-        "cviebrock/eloquent-sluggable": "^4.1",
-        "doctrine/dbal": "^2.5"
+        "stripe/stripe-php": "3.23.0",
+        "barryvdh/laravel-cors": "0.11.3",
+        "cviebrock/eloquent-sluggable": "4.8.0",
+        "doctrine/dbal": "2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "^8",
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*",
-        "laracasts/generators": "^1.1"
+        "laracasts/generators": "^1.1",
+        "composer/composer": "^1.9"
     },
     "autoload": {
         "classmap": [
